@@ -18,6 +18,7 @@ uint32_t vcat_get_max_vcbm(const struct acrn_vm *vm, int res);
 void init_vcat_msrs(struct acrn_vcpu *vcpu);
 uint16_t vcat_get_num_vclosids(const struct acrn_vm *vm);
 uint32_t vcat_pcbm_to_vcbm(const struct acrn_vm *vm, uint32_t pcbm, int res);
+int32_t vcat_rdmsr(const struct acrn_vcpu *vcpu, uint32_t msr, uint64_t *rval);
 
 #endif /* VCAT_H_ */
 

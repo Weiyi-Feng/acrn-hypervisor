@@ -438,6 +438,51 @@ uint32_t vcat_pcbm_to_vcbm(const struct acrn_vm *vm, uint32_t pcbm, int res)
 }
 
 /**
+ * @pre vm != NULL
+ */
+static bool is_l2_cbm_vmsr(const struct acrn_vm *vm, uint32_t msr)
+{
+	/* num_cbm_msrs = num_vclosids */
+	uint16_t num_cbm_msrs = vcat_get_num_vclosids(vm);
+
+	return ((get_rdt_res_cap_info(RDT_RESOURCE_L2)->num_closids > 0U)
+		&& (msr >= MSR_IA32_L2_MASK_BASE) && (msr < (MSR_IA32_L2_MASK_BASE + num_cbm_msrs)));
+}
+
+/**
+ * @pre vm != NULL
+ */
+static bool is_l3_cbm_vmsr(const struct acrn_vm *vm, uint32_t msr)
+{
+	/* num_cbm_msrs = num_vclosids */
+	uint16_t num_cbm_msrs = vcat_get_num_vclosids(vm);
+
+	return ((get_rdt_res_cap_info(RDT_RESOURCE_L3)->num_closids > 0U)
+		&& (msr >= MSR_IA32_L3_MASK_BASE) && (msr < (MSR_IA32_L3_MASK_BASE + num_cbm_msrs)));
+}
+
+/**
+ * @brief vCAT MSRs read handler.
+ *
+ * @pre vcpu != NULL && vcpu->vm != NULL && rval != NULL
+ */
+int32_t vcat_rdmsr(const struct acrn_vcpu *vcpu, uint32_t msr, uint64_t *rval)
+{
+	int ret = -EACCES;
+	struct acrn_vm *vm = vcpu->vm;
+
+	if (is_vcat_enabled(vm) && ((msr == MSR_IA32_PQR_ASSOC)
+		|| is_l2_cbm_vmsr(vm, msr) || is_l3_cbm_vmsr(vm, msr))) {
+		*rval = vcpu_get_guest_msr(vcpu, msr);
+		ret = 0;
+	} else {
+		*rval = 0UL;
+	}
+
+	return ret;
+}
+
+/**
  * @brief MSR_IA32_type_MASK_n MSRs write handler
  *
  * @pre vcpu != NULL && vcpu->vm != NULL
