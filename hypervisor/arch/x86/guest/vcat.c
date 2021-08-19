@@ -483,14 +483,91 @@ int32_t vcat_rdmsr(const struct acrn_vcpu *vcpu, uint32_t msr, uint64_t *rval)
 }
 
 /**
+ * @brief Map vCBM to pCBM
+ *
+ * @pre vm != NULL
+ */
+static uint32_t vcbm_to_pcbm(const struct acrn_vm *vm, uint32_t vcbm, int res)
+{
+	uint32_t max_pcbm = get_max_pcbm(vm, res);
+
+	/* Find the position low (the first bit set) in max_pcbm */
+	uint16_t low = ffs64((uint64_t)max_pcbm);
+
+	/*
+	 * Mask off the unwanted bits to prevent erroneous mask values,
+	 * pcbm set bits should only be in the range of [low, high]
+	 */
+	return (vcbm << low) & max_pcbm;
+}
+
+/**
+ * @brief Map vMSR to pMSR
+ * Each vMSR or pMSR is identified by a 32-bit integer
+ *
+ * @pre vm != NULL
+ * @pre res == RDT_RESOURCE_L2 || res == RDT_RESOURCE_L3
+ */
+static uint32_t vmsr_to_pmsr(const struct acrn_vm *vm, uint32_t vmsr, int res)
+{
+	uint32_t pmsr = vmsr;
+	uint32_t vclosid;
+
+	switch (res) {
+	case RDT_RESOURCE_L2:
+		vclosid = vmsr - MSR_IA32_L2_MASK_BASE;
+		pmsr = MSR_IA32_L2_MASK_BASE + vclosid_to_pclosid(vm, vclosid);
+		break;
+
+	case RDT_RESOURCE_L3:
+		vclosid = vmsr - MSR_IA32_L3_MASK_BASE;
+		pmsr = MSR_IA32_L3_MASK_BASE + vclosid_to_pclosid(vm, vclosid);
+		break;
+
+	default:
+		break;
+	}
+
+	return pmsr;
+}
+
+/**
  * @brief MSR_IA32_type_MASK_n MSRs write handler
  *
  * @pre vcpu != NULL && vcpu->vm != NULL
  */
-static int32_t wrmsr_cbm(__unused struct acrn_vcpu *vcpu, __unused uint32_t msr, __unused uint64_t val, __unused int res)
+static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int res)
 {
-	/*TODO: this is going to be implemented in a subsequent commit */
-	return -EFAULT;
+	uint64_t vmsr_value, pmsr_value;
+	uint32_t pmsr = vmsr_to_pmsr(vcpu->vm, msr, res);
+	uint32_t vcbm = (uint32_t)(val & 0xFFFFFFFFUL);
+	uint32_t pcbm = vcbm_to_pcbm(vcpu->vm, vcbm, res);
+
+	pmsr_value = msr_read(pmsr);
+
+	/* Preserve reserved bits in pmsr_value, and only set the pCBM bits */
+	pmsr_value = (pmsr_value & 0xFFFFFFFF00000000UL) | pcbm;
+
+	/* Try to set pCBM */
+	msr_write(pmsr, pmsr_value);
+
+	/*
+	 * Validate if pCBM was correctly set:
+	 * The H/W may have minimum CBM length requirement (the minimum number
+	 * of consecutive bits which must be set when writing a mask) and it
+	 * may not write the pCBM as expected so reading back to double check
+	 * and update vCBM accordingly.
+	 */
+	pmsr_value = msr_read(pmsr);
+	pcbm = (uint32_t)(pmsr_value & 0xFFFFFFFFUL);
+	vcbm = vcat_pcbm_to_vcbm(vcpu->vm, pcbm, res);
+
+	/* Preserve reserved bits in vmsr_value, and only set the vCBM bits */
+	vmsr_value = (pmsr_value & 0xFFFFFFFF00000000UL) | vcbm;
+
+	vcpu_set_guest_msr(vcpu, msr, vmsr_value);
+
+	return 0;
 }
 
 /**
@@ -510,4 +587,26 @@ static int32_t wrmsr_pqr(struct acrn_vcpu *vcpu, uint64_t val)
 	vcpu_set_guest_msr(vcpu, MSR_IA32_PQR_ASSOC, val);
 
 	return 0;
+}
+
+/**
+ * @brief vCAT MSRs write handler.
+ *
+ * @pre vcpu != NULL && vcpu->vm != NULL
+ */
+int32_t vcat_wrmsr(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val)
+{
+	int32_t ret = -EACCES;
+
+	if (is_vcat_enabled(vcpu->vm)) {
+		if (msr == MSR_IA32_PQR_ASSOC) {
+			ret = wrmsr_pqr(vcpu, val);
+		} else if (is_l2_cbm_vmsr(vcpu->vm, msr)) {
+			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L2);
+		} else if (is_l3_cbm_vmsr(vcpu->vm, msr)) {
+			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L3);
+		}
+	}
+
+	return ret;
 }
