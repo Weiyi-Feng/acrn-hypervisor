@@ -395,6 +395,49 @@ void init_vcat_msrs(struct acrn_vcpu *vcpu)
 }
 
 /**
+ * @brief Map pCBM to vCBM
+ *
+ * @pre vm != NULL
+ */
+uint32_t vcat_pcbm_to_vcbm(const struct acrn_vm *vm, uint32_t pcbm, int res)
+{
+	/*
+	 * max_pcbm/CLOS_MASK is defined in scenario file and is a contiguous bitmask starting
+	 * at bit position low (the lowest assigned physical cache way) and ending at position
+	 * high (the highest assigned physical cache way, inclusive). As CBM only allows
+	 * contiguous '1' combinations, so max_pcbm essentially is a bitmask that selects/covers
+	 * all the physical cache ways assigned to the VM.
+	 *
+	 * For illustrative purpose, here we assume that we have the two functions
+	 * GENMASK() and BIT() defined as follows:
+	 * GENMASK(high, low): create a contiguous bitmask starting at bit position low and
+	 * ending at position high, inclusive.
+	 * BIT(n): create a bitmask with bit n set.
+	 *
+	 * max_pcbm, min_pcbm, max_vcbm, min_vcbm and the relationship between them
+	 * can be expressed as:
+	 * max_pcbm = GENMASK(high, low)
+	 * min_pcbm = BIT(low)
+	 *
+	 * max_vcbm = GENMASK(high - low, 0)
+	 * min_vcbm = BIT(0)
+	 *
+	 * pcbm to vcbm conversion (mask off the unwanted bits to prevent erroneous mask values):
+	 * vcbm = (pcbm & max_pcbm) >> low
+	 *
+	 * max_pcbm will be mapped to max_vcbm
+	 * min_pcbm will be mapped to min_vcbm
+	 */
+	uint32_t max_pcbm = get_max_pcbm(vm, res);
+
+	/* Find the position low (the first bit set) in max_pcbm */
+	uint16_t low = ffs64((uint64_t)max_pcbm);
+
+	/* pcbm set bits should only be in the range of [low, high] */
+	return (pcbm & max_pcbm) >> low;
+}
+
+/**
  * @brief MSR_IA32_type_MASK_n MSRs write handler
  *
  * @pre vcpu != NULL && vcpu->vm != NULL
