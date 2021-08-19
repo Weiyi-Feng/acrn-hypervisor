@@ -22,13 +22,14 @@
 #include <asm/tsc.h>
 #include <trace.h>
 #include <logmsg.h>
+#include <asm/guest/vcat.h>
 
 #define INTERCEPT_DISABLE		(0U)
 #define INTERCEPT_READ			(1U << 0U)
 #define INTERCEPT_WRITE			(1U << 1U)
 #define INTERCEPT_READ_WRITE		(INTERCEPT_READ | INTERCEPT_WRITE)
 
-static const uint32_t emulated_guest_msrs[NUM_GUEST_MSRS] = {
+static uint32_t emulated_guest_msrs[NUM_GUEST_MSRS] = {
 	/*
 	 * MSRs that trusty may touch and need isolation between secure and normal world
 	 * This may include MSR_IA32_STAR, MSR_IA32_LSTAR, MSR_IA32_FMASK,
@@ -79,6 +80,24 @@ static const uint32_t emulated_guest_msrs[NUM_GUEST_MSRS] = {
 #ifdef CONFIG_NVMX_ENABLED
 	LIST_OF_VMX_MSRS,
 #endif
+
+	/* The following range of elements are reserved for vCAT usage and are
+	 * initialized dynamically by init_vcat_intercepted_msr_list() during platform initialization:
+	 * [(NUM_GUEST_MSRS - NUM_VCAT_MSRS) ... (NUM_GUEST_MSRS - 1)] = {
+	 * The following layout of each vCAT MSR entry is determined by vcat_msr2index() in vcat.c:
+	 * MSR_IA32_L3_MASK_BASE,
+	 * MSR_IA32_L3_MASK_BASE + 1,
+	 * ...
+	 * MSR_IA32_L3_MASK_BASE + NUM_VCAT_L3_MSRS - 1,
+	 *
+	 * MSR_IA32_L2_MASK_BASE + NUM_VCAT_L3_MSRS,
+	 * MSR_IA32_L2_MASK_BASE + NUM_VCAT_L3_MSRS + 1,
+	 * ...
+	 * MSR_IA32_L2_MASK_BASE + NUM_VCAT_L3_MSRS + NUM_VCAT_L2_MSRS - 1,
+	 *
+	 * MSR_IA32_PQR_ASSOC + NUM_VCAT_L3_MSRS + NUM_VCAT_L2_MSRS
+	 * }
+	 */
 };
 
 static const uint32_t mtrr_msrs[] = {
@@ -407,6 +426,46 @@ void init_msr_emulation(struct acrn_vcpu *vcpu)
 
 	/* Initialize VMX MSRs for nested virtualization */
 	init_vmx_msrs(vcpu);
+}
+
+#ifdef CONFIG_VCAT_ENABLED
+static void init_vcat_msr_entry(uint32_t msr)
+{
+	/* Get index into the emulated_guest_msrs[] table for a given vCAT MSR */
+	uint32_t index = vcat_msr2index(msr) + NUM_GUEST_MSRS - NUM_VCAT_MSRS;
+
+	emulated_guest_msrs[index] = msr;
+}
+
+/* Init emulated_guest_msrs[] dynamically for vCAT MSRs */
+static void init_vcat_intercepted_msr_list(void)
+{
+	uint32_t msr;
+
+	/* MSR_IA32_L2_MASK_n MSRs */
+	for (msr = MSR_IA32_L2_MASK_BASE; msr < (MSR_IA32_L2_MASK_BASE + NUM_VCAT_L2_MSRS); msr++) {
+		init_vcat_msr_entry(msr);
+	}
+
+	/* MSR_IA32_L3_MASK_n MSRs */
+	for (msr = MSR_IA32_L3_MASK_BASE; msr < (MSR_IA32_L3_MASK_BASE + NUM_VCAT_L3_MSRS); msr++) {
+		init_vcat_msr_entry(msr);
+	}
+
+	/* MSR_IA32_PQR_ASSOC */
+	init_vcat_msr_entry(MSR_IA32_PQR_ASSOC);
+}
+#endif
+
+/*
+ * Performs one-time initialization for vmsr, called once by BSP pCPU during
+ * platform initialization
+ */
+void init_vmsr(void)
+{
+#ifdef CONFIG_VCAT_ENABLED
+	init_vcat_intercepted_msr_list();
+#endif
 }
 
 static int32_t write_pat_msr(struct acrn_vcpu *vcpu, uint64_t value)

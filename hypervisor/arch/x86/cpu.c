@@ -186,6 +186,8 @@ void init_pcpu_pre(bool is_bsp)
 			panic("System IOAPIC info is incorrect!");
 		}
 
+		init_vmsr();
+
 #ifdef CONFIG_RDT_ENABLED
 		init_rdt_info();
 #endif
