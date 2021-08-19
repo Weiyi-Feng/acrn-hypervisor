@@ -7,7 +7,15 @@
 #ifndef VCAT_H_
 #define VCAT_H_
 
+#include <asm/guest/vm.h>
+
 uint32_t vcat_msr2index(uint32_t msr);
+bool is_vcat_enabled(const struct acrn_vm *vm);
+bool is_l2_vcat_enabled(const struct acrn_vm *vm);
+bool is_l3_vcat_enabled(const struct acrn_vm *vm);
+uint16_t vcat_get_vcbm_len(const struct acrn_vm *vm, int res);
+uint32_t vcat_get_max_vcbm(const struct acrn_vm *vm, int res);
+void init_vcat_msrs(struct acrn_vcpu *vcpu);
 
 #endif /* VCAT_H_ */
 

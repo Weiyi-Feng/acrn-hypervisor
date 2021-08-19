@@ -426,6 +426,15 @@ void init_msr_emulation(struct acrn_vcpu *vcpu)
 
 	/* Initialize VMX MSRs for nested virtualization */
 	init_vmx_msrs(vcpu);
+
+#ifdef CONFIG_VCAT_ENABLED
+	/*
+	 * Set vMSR and pMSR
+	 * init_vcat_msrs() will overwrite the vcpu->arch.msr_area.guest[MSR_AREA_IA32_PQR_ASSOC].value
+	 * set by prepare_auto_msr_area()
+	 */
+	init_vcat_msrs(vcpu);
+#endif
 }
 
 #ifdef CONFIG_VCAT_ENABLED
