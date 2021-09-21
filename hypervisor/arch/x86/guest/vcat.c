@@ -174,7 +174,7 @@
  */
 
 static int32_t wrmsr_pqr(struct acrn_vcpu *vcpu, uint64_t val);
-static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int res);
+static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int res, bool this_vcpu);
 
 /**
  * @brief Map vCAT MSR address to zero based index
@@ -346,7 +346,7 @@ static void init_cbm_msrs(struct acrn_vcpu *vcpu, int res, uint32_t msr_base)
 		/* Initial vCBM is set to max_vcbm (maximum virtual cache space) */
 		for (msr = msr_base; msr < (msr_base + num_vclosids); msr++) {
 			/* Call wrmsr_cbm() to set vCBM (will also set pCBM internally) */
-			(void)wrmsr_cbm(vcpu, msr, max_vcbm, res);
+			(void)wrmsr_cbm(vcpu, msr, max_vcbm, res, true);
 		}
 	}
 }
@@ -531,12 +531,56 @@ static uint32_t vmsr_to_pmsr(const struct acrn_vm *vm, uint32_t vmsr, int res)
 	return pmsr;
 }
 
+void get_cache_shift(uint32_t *l2_shift, uint32_t *l3_shift);
+/**
+ * @pre l2_id != NULL && l3_id != NULL
+ */
+static void get_lapic_cache_id(uint16_t lapic_id, uint32_t *l2_id, uint32_t *l3_id)
+{
+	uint32_t l2_shift, l3_shift;
+
+	get_cache_shift(&l2_shift, &l3_shift);
+
+	*l2_id = lapic_id >> l2_shift;
+	*l3_id = lapic_id >> l3_shift;
+}
+
+/**
+ * @brief Set vCBM to to all the vCPUs that share cache with vcpu
+ * @pre vcpu != NULL && vcpu->vm != NULL
+ */
+static void vcpu_set_guest_cbm_msrs(const struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val)
+{
+	uint16_t i;
+	struct acrn_vcpu *tmp_vcpu;
+	uint32_t l2_id, l3_id;
+	struct acrn_vm *vm = vcpu->vm;
+
+	get_lapic_cache_id(per_cpu(lapic_id, pcpuid_from_vcpu(vcpu)), &l2_id, &l3_id);
+
+	/*
+	 * Determine which logical processors share an MSR (for instance local
+	 * to a core, or shared across multiple cores) by checking if they have the same
+	 * L2/L3 cache id
+	 */
+	foreach_vcpu(i, vm, tmp_vcpu) {
+		uint32_t tmp_l2_id, tmp_l3_id;
+
+		get_lapic_cache_id(per_cpu(lapic_id, pcpuid_from_vcpu(tmp_vcpu)), &tmp_l2_id, &tmp_l3_id);
+
+		if ((is_l2_cbm_vmsr(vm, msr) && (l2_id == tmp_l2_id))
+			|| (is_l3_cbm_vmsr(vm, msr) && (l3_id == tmp_l3_id))) {
+			vcpu_set_guest_msr(tmp_vcpu, msr, val);
+		}
+	}
+}
+
 /**
  * @brief MSR_IA32_type_MASK_n MSRs write handler
  *
  * @pre vcpu != NULL && vcpu->vm != NULL
  */
-static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int res)
+static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int res, bool this_vcpu)
 {
 	uint64_t vmsr_value, pmsr_value;
 	uint32_t pmsr = vmsr_to_pmsr(vcpu->vm, msr, res);
@@ -565,7 +609,21 @@ static int32_t wrmsr_cbm(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val, int
 	/* Preserve reserved bits in vmsr_value, and only set the vCBM bits */
 	vmsr_value = (pmsr_value & 0xFFFFFFFF00000000UL) | vcbm;
 
-	vcpu_set_guest_msr(vcpu, msr, vmsr_value);
+	if (this_vcpu) {
+		/* Set vmsr_value only to this vcpu */
+		vcpu_set_guest_msr(vcpu, msr, vmsr_value);
+	} else {
+		/*
+		 * The L2 mask MSRs are scoped at the same level as the L2 cache (similarly,
+		 * the L3 mask MSRs are scoped at the same level as the L3 cache).
+		 *
+		 * For example, the MSR_IA32_L3_MASK_n MSRs are scoped at socket level, which means if
+		 * we program MSR_IA32_L3_MASK_n on one cpu and the same MSR_IA32_L3_MASK_n on all other cpus
+		 * of the same socket will also get the change!
+		 * Set vmsr_value to all the vCPUs that share cache with vcpu to mimic this hardware behavior.
+		 */
+		vcpu_set_guest_cbm_msrs(vcpu, msr, vmsr_value);
+	}
 
 	return 0;
 }
@@ -602,9 +660,9 @@ int32_t vcat_wrmsr(struct acrn_vcpu *vcpu, uint32_t msr, uint64_t val)
 		if (msr == MSR_IA32_PQR_ASSOC) {
 			ret = wrmsr_pqr(vcpu, val);
 		} else if (is_l2_cbm_vmsr(vcpu->vm, msr)) {
-			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L2);
+			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L2, false);
 		} else if (is_l3_cbm_vmsr(vcpu->vm, msr)) {
-			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L3);
+			ret = wrmsr_cbm(vcpu, msr, val, RDT_RESOURCE_L3, false);
 		}
 	}
 
