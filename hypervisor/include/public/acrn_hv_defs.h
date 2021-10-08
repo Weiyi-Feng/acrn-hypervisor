@@ -337,8 +337,6 @@ struct acrn_platform_info {
 		 */
 		uint64_t vm_configs_addr;
 
-		/** Maximum Kata container number in SOS VM */
-		uint64_t max_kata_containers;
 		/** Align the size of Configuration info to 128Bytes. */
 		uint8_t  reserved[104];
 	} sw;
