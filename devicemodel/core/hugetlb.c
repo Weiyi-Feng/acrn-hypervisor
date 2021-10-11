@@ -168,8 +168,6 @@ static int unlock_acrn_hugetlb(void)
 
 static int open_hugetlbfs(struct vmctx *ctx, int level)
 {
-	char uuid_str[48];
-	uint8_t	 UUID[16];
 	char *path;
 	size_t len;
 	struct statfs fs;
@@ -181,26 +179,15 @@ static int open_hugetlbfs(struct vmctx *ctx, int level)
 
 	path = hugetlb_priv[level].node_path;
 	memset(path, '\0', MAX_PATH_LEN);
-	snprintf(path, MAX_PATH_LEN, "%s%s/", hugetlb_priv[level].mount_path, ctx->name);
-
+	snprintf(path, MAX_PATH_LEN, "%s%s/tugetlb", hugetlb_priv[level].mount_path, ctx->name);
+pr_err("hugetlb path %s \n");
 	len = strnlen(path, MAX_PATH_LEN);
-	/* UUID will use 32 bytes */
-	if (len + 32 > MAX_PATH_LEN) {
+	if (len > MAX_PATH_LEN) {
 		pr_err("PATH overflow");
 		return -ENOMEM;
 	}
 
-	uuid_copy(UUID, ctx->vm_uuid);
-	snprintf(uuid_str, sizeof(uuid_str),
-		"%02X%02X%02X%02X%02X%02X%02X%02X"
-		"%02X%02X%02X%02X%02X%02X%02X%02X",
-		UUID[0], UUID[1], UUID[2], UUID[3],
-		UUID[4], UUID[5], UUID[6], UUID[7],
-		UUID[8], UUID[9], UUID[10], UUID[11],
-		UUID[12], UUID[13], UUID[14], UUID[15]);
-
-	*(path + len) = '\0';
-	strncat(path, uuid_str, strnlen(uuid_str, sizeof(uuid_str)));
+	//*(path + len) = '\0';
 
 	pr_info("open hugetlbfs file %s\n", path);
 
