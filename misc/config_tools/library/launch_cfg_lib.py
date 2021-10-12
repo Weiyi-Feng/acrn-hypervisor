@@ -205,28 +205,6 @@ def is_config_file_match():
     return (err_dic, match)
 
 
-def get_vm_uuid_idx(vm_type, uosid):
-
-    i_cnt = 0
-    for vm_i,vm_t in common.VM_TYPES.items():
-        if vm_t == vm_type and vm_i <= uosid:
-            i_cnt += 1
-    if i_cnt > 0:
-        i_cnt -= 1
-
-    return i_cnt
-
-
-def get_scenario_uuid(uosid, sos_vmid):
-    # {id_num:uuid} (id_num:0~max)
-    scenario_uuid = ''
-    vm_id = uosid + sos_vmid
-    i_cnt = get_vm_uuid_idx(common.VM_TYPES[vm_id], vm_id)
-    scenario_uuid = scenario_cfg_lib.VM_DB[common.VM_TYPES[vm_id]]['uuid'][i_cnt]
-    return scenario_uuid
-
-
-
 def get_sos_vmid():
 
     sos_id = ''
@@ -586,7 +564,7 @@ def set_shm_regions(launch_item_values, scenario_info):
     for vm_id, vm_type in vm_types.items():
         if vm_type in ['SOS_VM']:
             sos_vm_id = vm_id
-        elif vm_type in ['POST_STD_VM', 'POST_RT_VM', 'KATA_VM']:
+        elif vm_type in ['POST_STD_VM', 'POST_RT_VM']:
             uos_id = vm_id - sos_vm_id
             shm_region_key = 'uos:id={},shm_regions,shm_region'.format(uos_id)
             launch_item_values[shm_region_key] = ['']

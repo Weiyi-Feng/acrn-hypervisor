@@ -25,6 +25,7 @@ from scenario_config.scenario_cfg_gen import validate_scenario_setting
 from launch_config.launch_cfg_gen import get_launch_item_values
 from launch_config.launch_cfg_gen import validate_launch_setting
 from library.common import MAX_VM_NUM
+import scenario_config.default_populator as default_populator
 
 
 CONFIG_APP = Blueprint('CONFIG_APP', __name__, template_folder='templates')
@@ -298,30 +299,7 @@ def save_scenario():
 
     generator = scenario_config_data['generator']
     if generator is not None:
-        if generator == 'remove_vm_kata':
-            scenario_config.delete_curr_key('vm:desc=specific for Kata')
-            assign_vm_id(scenario_config)
-        elif generator == 'add_vm_kata':
-            vm_list = []
-            for vm in list(scenario_config.get_curr_root()):
-                if vm.tag == 'vm':
-                    vm_list.append(vm.attrib['id'])
-            if len(vm_list) >= MAX_VM_NUM:
-                return {'status': 'fail',
-                        'error_list': {'error': 'Can not add a new VM. Max VM number is {}.'.format(MAX_VM_NUM)}}
-
-            # clone vm kata from generic config
-            generic_scenario_config = get_generic_scenario_config(scenario_config)
-            generic_scenario_config_root = generic_scenario_config.get_curr_root()
-            elem_kata = None
-            for vm in list(generic_scenario_config_root):
-                if 'desc' in vm.attrib and vm.attrib['desc'] == 'specific for Kata':
-                    elem_kata = vm
-                    break
-            if elem_kata is not None:
-                scenario_config.clone_curr_elem(elem_kata)
-            assign_vm_id(scenario_config)
-        elif generator.startswith('add_vm:'):
+        if generator.startswith('add_vm:'):
             vm_list = []
             for vm in list(scenario_config.get_curr_root()):
                 if vm.tag == 'vm':
@@ -444,8 +422,6 @@ def save_launch():
                                                 'Please select a scenario with available post launched VMs.'}}
             add_vm_id = add_launch_type.split('ID :')[1].replace(')', '').strip()
             add_launch_type = 'LAUNCH_' + add_launch_type.split()[0]
-            if add_launch_type == 'LAUNCH_KATA_VM':
-                add_launch_type = 'LAUNCH_POST_STD_VM'
             add_launch_id = 1
             post_vm_list = get_post_launch_vm_list(scenario_name)
             for i in range(len(post_vm_list)):
@@ -618,12 +594,17 @@ def create_setting():
             src_file_name = os.path.join(current_app.config.get('DEFAULT_CONFIG_PATH'), 'generic_board', template_file_name + '.xml')
         else: # load
             src_file_name = os.path.join(current_app.config.get('DEFAULT_CONFIG_PATH'), board_type, default_name + '.xml')
+
+        xsd_path =  os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'schema', 'config.xsd')
+        out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), create_name + '.xml')
+        default_populator.main(xsd_path, src_file_name, out_path)
         if os.path.isfile(src_file_name):
             if os.path.isfile(scenario_file):
                 os.remove(scenario_file)
-            copyfile(src_file_name,
+            copyfile(out_path,
                  os.path.join(current_app.config.get('CONFIG_PATH'), board_type,
                               create_name + '.xml'))
+            os.remove(out_path)
 
         if mode == 'create':
             # update RDT->CLOS_MASK according to board xml
@@ -1073,15 +1054,19 @@ def get_generic_scenario_config(scenario_config, add_vm_type=None):
             'SOS_VM': ('shared', 'vm:id=0'),
             'POST_STD_VM': ('shared', 'vm:id=1'),
             'POST_RT_VM': ('shared', 'vm:id=2'),
-            'KATA_VM': ('shared', 'vm:id=7'),
             'LAUNCH_POST_STD_VM': ('hybrid_launch_2uos', 'uos:id=1'),
             'LAUNCH_POST_RT_VM': ('shared_launch_6uos', 'uos:id=2')
         }
         config_path = os.path.join(current_app.config.get('DEFAULT_CONFIG_PATH'), 'generic_board')
-        generic_scenario_config = XmlConfig(config_path)
-        if os.path.isfile(os.path.join(config_path, vm_dict[add_vm_type][0] + '.xml')):
-            generic_scenario_config.set_curr(vm_dict[add_vm_type][0])
+        xml_path = os.path.join(config_path, vm_dict[add_vm_type][0] + '.xml')
+        if os.path.isfile(xml_path):
+            xsd_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'schema', 'config.xsd')
+            output_xml = os.path.join(config_path, vm_dict[add_vm_type][0] + '_1' + '.xml')
+            default_populator.main(xsd_path, xml_path, output_xml)
+            generic_scenario_config = XmlConfig(config_path)
+            generic_scenario_config.set_curr(vm_dict[add_vm_type][0] + '_1')
             generic_scenario_config = set_default_config(generic_scenario_config)
+            os.remove(output_xml)
             return generic_scenario_config.get_curr_elem(vm_dict[add_vm_type][1])
         else:
             return None
@@ -1262,7 +1247,7 @@ def assign_vm_id(scenario_config):
                         pre_launched_vm_num += 1
                     elif item.text in ['SOS_VM']:
                         sos_vm_num += 1
-                    elif item.text in ['POST_STD_VM', 'POST_RT_VM', 'KATA_VM']:
+                    elif item.text in ['POST_STD_VM', 'POST_RT_VM']:
                         post_launched_vm_num += 1
 
     pre_launched_vm_index = 0
@@ -1278,7 +1263,7 @@ def assign_vm_id(scenario_config):
                     elif item.text in ['SOS_VM']:
                         vm.attrib['id'] = str(sos_vm_index)
                         sos_vm_index += 1
-                    elif item.text in ['POST_STD_VM', 'POST_RT_VM', 'KATA_VM']:
+                    elif item.text in ['POST_STD_VM', 'POST_RT_VM']:
                         vm.attrib['id'] = str(post_launched_vm_index)
                         post_launched_vm_index += 1
 
