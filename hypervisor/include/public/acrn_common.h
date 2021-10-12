@@ -66,6 +66,8 @@
 #define VIRTUAL_PM1A_SLP_EN		0x2000U
 #define	VIRTUAL_PM1A_ALWAYS_ZERO	0xc003
 
+#define VM_NAME_LEN        (16U)
+
 /**
  * @brief Hypercall
  *
@@ -350,8 +352,8 @@ struct acrn_vm_creation {
 	/** Reserved */
 	uint16_t reserved1;
 
-	/** the UUID of this VM */
-	uint8_t	 uuid[16];
+	/** the name of this VM */
+	uint8_t	 name[16];
 
 	/* VM flag bits from Guest OS, now used
 	 *  GUEST_FLAG_SECURE_WORLD_ENABLED          (1UL<<0)
@@ -595,7 +597,6 @@ enum acrn_vm_load_order {
 struct acrn_vm_config_header {
        enum acrn_vm_load_order load_order;
        char name[MAX_VM_OS_NAME_LEN];
-       const uint8_t uuid[16];
        uint8_t reserved[2];
        uint8_t severity;
        uint64_t cpu_affinity;

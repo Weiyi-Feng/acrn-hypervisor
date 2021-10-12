@@ -12,7 +12,6 @@
 #include <board_info.h>
 #include <boot.h>
 #include <acrn_common.h>
-#include <vm_uuids.h>
 #include <vm_configurations.h>
 #include <asm/sgx.h>
 #include <acrn_hv_defs.h>
@@ -38,31 +37,24 @@
 #define MAX_MMIO_DEV_NUM	2U
 
 #define CONFIG_SOS_VM		.load_order = SOS_VM,	\
-				.uuid = SOS_VM_UUID,	\
 				.severity = SEVERITY_SOS
 
 #define CONFIG_SAFETY_VM(idx)	.load_order = PRE_LAUNCHED_VM,	\
-				.uuid = SAFETY_VM_UUID##idx,	\
 				.severity = SEVERITY_SAFETY_VM
 
 #define CONFIG_PRE_STD_VM(idx)	.load_order = PRE_LAUNCHED_VM,	\
-				.uuid = PRE_STANDARD_VM_UUID##idx,	\
 				.severity = SEVERITY_STANDARD_VM
 
 #define CONFIG_PRE_RT_VM(idx)	.load_order = PRE_LAUNCHED_VM,	\
-				.uuid = PRE_RTVM_UUID##idx,	\
 				.severity = SEVERITY_RTVM
 
 #define CONFIG_POST_STD_VM(idx)	.load_order = POST_LAUNCHED_VM,	\
-				.uuid = POST_STANDARD_VM_UUID##idx,	\
 				.severity = SEVERITY_STANDARD_VM
 
 #define CONFIG_POST_RT_VM(idx)	.load_order = POST_LAUNCHED_VM,	\
-				.uuid = POST_RTVM_UUID##idx,	\
 				.severity = SEVERITY_RTVM
 
 #define CONFIG_KATA_VM(idx)	.load_order = POST_LAUNCHED_VM,	\
-				.uuid = KATA_VM_UUID##idx,	\
 				.severity = SEVERITY_STANDARD_VM
 
 /* ACRN guest severity */
@@ -199,7 +191,7 @@ struct acrn_vm_config {
 
 struct acrn_vm_config *get_vm_config(uint16_t vm_id);
 uint8_t get_vm_severity(uint16_t vm_id);
-bool vm_has_matched_uuid(uint16_t vmid, const uint8_t *uuid);
+bool vm_has_matched_name(uint16_t vmid, const uint8_t *name);
 
 extern struct acrn_vm_config vm_configs[CONFIG_MAX_VM_NUM];
 

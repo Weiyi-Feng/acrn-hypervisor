@@ -57,11 +57,11 @@ void *get_sworld_memory_base(void)
 	return post_uos_sworld_memory;
 }
 
-uint16_t get_vmid_by_uuid(const uint8_t *uuid)
+uint16_t get_vmid_by_name(const uint8_t *name)
 {
 	uint16_t vm_id = 0U;
 
-	while (!vm_has_matched_uuid(vm_id, uuid)) {
+	while (!vm_has_matched_name(vm_id, name)) {
 		vm_id++;
 		if (vm_id == CONFIG_MAX_VM_NUM) {
 			break;
@@ -524,9 +524,6 @@ int32_t create_vm(uint16_t vm_id, uint64_t pcpu_bitmap, struct acrn_vm_config *v
 
 	init_ept_pgtable(&vm->arch_vm.ept_pgtable, vm->vm_id);
 	vm->arch_vm.nworld_eptp = pgtable_create_root(&vm->arch_vm.ept_pgtable);
-
-	(void)memcpy_s(&vm->uuid[0], sizeof(vm->uuid),
-		&vm_config->uuid[0], sizeof(vm_config->uuid));
 
 	if (is_sos_vm(vm)) {
 		/* Only for SOS_VM */

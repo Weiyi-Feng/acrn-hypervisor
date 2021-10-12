@@ -117,7 +117,7 @@ struct acrn_vm *parse_target_vm(struct acrn_vm *sos_vm, uint64_t hcall_id, uint6
 	switch (hcall_id) {
 	case HC_CREATE_VM:
 		if (copy_from_gpa(sos_vm, &cv, param1, sizeof(cv)) == 0) {
-			vm_id = get_vmid_by_uuid(&cv.uuid[0]);
+			vm_id = get_vmid_by_name(cv.name);
 		}
 		break;
 
