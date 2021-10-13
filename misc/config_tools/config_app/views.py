@@ -619,7 +619,7 @@ def create_setting():
                 scenario_config.clone_curr_elem(elem_clos_max, 'hv', 'FEATURES', 'RDT')
             # for i in range(num_mba_delay):
             #    scenario_config.clone_curr_elem(elem_mba_delay, 'hv', 'FEATURES', 'RDT')
-            for i in range(8):
+            for i in range(7):
                 scenario_config.delete_curr_key('vm:id={}'.format(i))
             scenario_config = set_default_config(scenario_config)
         scenario_config.save(create_name)
