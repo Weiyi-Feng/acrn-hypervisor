@@ -43,7 +43,7 @@
 				.severity = SEVERITY_SAFETY_VM
 
 #define CONFIG_PRE_STD_VM(idx)	.load_order = PRE_LAUNCHED_VM,	\
-				.severity = SEVERITY_STANDARD_VM
+				.severity = SEVERITY_RTVM
 
 #define CONFIG_PRE_RT_VM(idx)	.load_order = PRE_LAUNCHED_VM,	\
 				.severity = SEVERITY_RTVM
