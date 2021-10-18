@@ -143,7 +143,7 @@ struct pt_intx_config {
 
 struct acrn_vm_config {
 	enum acrn_vm_load_order load_order;		/* specify the load order of VM */
-	char name[MAX_VM_OS_NAME_LEN];			/* VM name identifier, useful for debug. */
+	char name[VM_NAME_LEN];					/* VM name identifier, useful for debug. */
 	uint8_t reserved[2];				/* Temporarily reserve it so that don't need to update
 							 * the users of get_platform_info frequently.
 							 */

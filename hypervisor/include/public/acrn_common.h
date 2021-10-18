@@ -592,11 +592,9 @@ enum acrn_vm_load_order {
 	MAX_LOAD_ORDER
 };
 
-#define MAX_VM_OS_NAME_LEN      32U
-
 struct acrn_vm_config_header {
        enum acrn_vm_load_order load_order;
-       char name[MAX_VM_OS_NAME_LEN];
+       char name[VM_NAME_LEN];
        uint8_t reserved[2];
        uint8_t severity;
        uint64_t cpu_affinity;

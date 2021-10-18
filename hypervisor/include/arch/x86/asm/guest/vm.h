@@ -156,7 +156,6 @@ struct acrn_vm {
 
 	struct vm_io_handler_desc emul_pio[EMUL_PIO_IDX_MAX];
 
-	uint8_t name[VM_NAME_LEN];
 	struct secure_world_control sworld_control;
 
 	/* Secure World's snapshot

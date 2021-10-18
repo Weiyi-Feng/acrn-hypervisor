@@ -262,6 +262,7 @@ static bool setup_trusty_info(struct acrn_vcpu *vcpu, uint32_t mem_size, uint64_
 	struct trusty_mem *mem;
 	struct trusty_key_info key_info;
 	struct trusty_startup_param startup_param;
+	uint8_t uuid[16] = {0};
 
 	(void)memset(&key_info, 0U, sizeof(key_info));
 
@@ -276,8 +277,7 @@ static bool setup_trusty_info(struct acrn_vcpu *vcpu, uint32_t mem_size, uint64_
 
 	/* Derive dvseed from dseed for Trusty */
 	if (derive_virtual_seed(&key_info.dseed_list[0U], &key_info.num_seeds,
-				  NULL, 0U,
-				  vcpu->vm->name, sizeof(vcpu->vm->name))) {
+				  NULL, 0U, uuid, 16)) {
 		/* Derive encryption key of attestation keybox from dseed */
 		if (derive_attkb_enc_key(key_info.attkb_enc_key)) {
 			/* Prepare trusty startup param */
