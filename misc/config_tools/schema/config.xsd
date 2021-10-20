@@ -493,8 +493,8 @@ to launch post-launched User VMs.</xs:documentation>
     </xs:annotation>
   </xs:assert>
 
-  <xs:assert test="if (//RDT_ENABLED = 'y')
-                   then not (//CDP_ENABLED = 'y' and //VCAT_ENABLED = 'y')
+  <xs:assert test="if (//VCAT_ENABLED = 'y')
+                   then (//CDP_ENABLED = 'n' and //RDT_ENABLED = 'y')
                    else true()">
     <xs:annotation>
       <xs:documentation>vCAT can be enabled only when RDT_ENABLED is 'y' and CDP_ENABLED is 'n'</xs:documentation>
