@@ -253,6 +253,11 @@ def get_uos_type():
     return uos_types
 
 
+def get_uos_names():
+    uos_vm_names = common.get_leaf_tag_map(common.LAUNCH_INFO_FILE, "vm_name")
+    return uos_vm_names
+
+
 def is_bdf_format(bdf_str):
     bdf_len = 7
     status = True

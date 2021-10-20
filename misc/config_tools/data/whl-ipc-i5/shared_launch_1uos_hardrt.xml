@@ -1,7 +1,8 @@
 <acrn-config board="whl-ipc-i5" scenario="shared" uos_launcher="1">
-    <uos id="2">
+    <uos id="1">
 	<uos_type desc="UOS type">PREEMPT-RT LINUX</uos_type>
 	<rtos_type desc="UOS Realtime capability">Hard RT</rtos_type>
+	<vm_name>POST_STD_VM1</vm_name>
 	<mem_size desc="UOS memory size in MByte">1024</mem_size>
 	<gvt_args configurable="0" desc="GVT settings. Set it to gvtd for GVTd, otherwise is GVTg arguments. The recommendation arguments for GVTg is 64 448 8. Leave it blank to disable GVT."></gvt_args>
 	<vbootloader desc="virtual bootloader method" readonly="true">ovmf</vbootloader>
