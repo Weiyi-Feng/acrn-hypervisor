@@ -50,17 +50,17 @@
 
     <xsl:call-template name="integer-by-key-value">
       <xsl:with-param name="key" select="'MEM_LOGLEVEL_DEFAULT'" />
-      <xsl:with-param name="value" select="MEM_LOGLEVEL" />
+      <xsl:with-param name="value" select="substring(MEM_LOGLEVEL/text(), 1, 1)" />
     </xsl:call-template>
 
     <xsl:call-template name="integer-by-key-value">
       <xsl:with-param name="key" select="'NPK_LOGLEVEL_DEFAULT'" />
-      <xsl:with-param name="value" select="NPK_LOGLEVEL" />
+      <xsl:with-param name="value" select="substring(NPK_LOGLEVEL/text(), 1, 1)" />
     </xsl:call-template>
 
     <xsl:call-template name="integer-by-key-value">
       <xsl:with-param name="key" select="'CONSOLE_LOGLEVEL_DEFAULT'" />
-      <xsl:with-param name="value" select="CONSOLE_LOGLEVEL" />
+      <xsl:with-param name="value" select="substring(CONSOLE_LOGLEVEL/text(), 1, 1)" />
     </xsl:call-template>
 
     <xsl:apply-templates select="SERIAL_CONSOLE" />
