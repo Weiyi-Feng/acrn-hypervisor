@@ -8,3 +8,4 @@ build
 /offline-tools/
 .idea
 venv
+/misc/config_tools/schema/sliced.xsd

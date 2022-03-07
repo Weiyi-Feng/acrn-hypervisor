@@ -19,7 +19,7 @@ const WrapIfAdditional = ({ children, disabled, id, label, onDropPropertyClick, 
                 React.createElement(Form.Control, { required: required, defaultValue: label, disabled: disabled || readonly, id: `${id}-key`, name: `${id}-key`, onBlur: !readonly ? handleBlur : undefined, type: "text" }))),
         React.createElement(Col, { xs: 5 }, children),
         React.createElement(Col, { xs: 2, className: "py-4" },
-            React.createElement(IconButton, { block: true, className: "w-100", variant: "danger", icon: "remove", tabIndex: -1, disabled: disabled || readonly, onClick: onDropPropertyClick(label) }))));
+            React.createElement(IconButton, { block: "true", className: "w-100", variant: "danger", icon: "remove", tabIndex: -1, disabled: disabled || readonly, onClick: onDropPropertyClick(label) }))));
 };
 export default WrapIfAdditional;
 //# sourceMappingURL=WrapIfAdditional.js.map
