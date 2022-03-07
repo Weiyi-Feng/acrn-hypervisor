@@ -1,30 +1,28 @@
 # -*- coding: utf-8 -*-
 # * Copyright (c) 2020 Intel Corporation
-import argparse
-import json
+import sys
 import os
+import json
 import shlex
 import subprocess
+import argparse
+
 from pathlib import Path
 
 DEBUG = False
 
 
 def run_command(cmd, path):
-    ret_code = 0
     if DEBUG:
         print("cmd = %s, path = %s" % (cmd, path))
     cmd_proc = subprocess.Popen(
         shlex.split(cmd),
         cwd=path,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
+        stdout=sys.stdout,
+        stderr=sys.stderr,
         universal_newlines=True
     )
     while True:
-        output = cmd_proc.stdout.readline()
-        if DEBUG:
-            print(output.strip())
         ret_code = cmd_proc.poll()
         if ret_code is not None:
             break
@@ -184,7 +182,10 @@ def create_acrn_board_inspector_deb(version, build_dir):
 
 def create_configurator_deb(build_dir):
     cmd_list = []
+    project_base = Path(__file__).parent.parent.parent
     configurator_path = Path(__file__).parent.parent / 'config_tools' / 'configurator'
+    add_cmd_list(cmd_list, 'python3 schema_slicer.py', project_base / "misc" / "config_tools" / "scenario_config")
+    add_cmd_list(cmd_list, 'python3 xs2js.py', project_base / "misc" / "config_tools" / "configurator" / "xs2js")
     add_cmd_list(cmd_list, 'yarn', configurator_path)
     add_cmd_list(cmd_list, 'yarn build', configurator_path)
     run_cmd_list(cmd_list)
