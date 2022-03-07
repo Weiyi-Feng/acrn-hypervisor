@@ -434,7 +434,7 @@
 						"default": 0
 					},
 					"title": "vcpu_clos",
-					"description": "By default (``GUEST_FLAG_VCAT_ENABLED`` is not specified):\nvcpu_clos is per-CPU and it configures each CPU in VMs to a desired CLOS ID in the ``VM`` section of the\nscenario file. Follow :ref:`rdt_detection_capabilities` to identify the maximum supported CLOS ID that can be used.\n\nIf ``GUEST_FLAG_VCAT_ENABLED`` is specified:\nvcpu_clos is not per-CPU anymore, just a list of physical CLOSIDs (minimum 2) that are assigned to VMs\nfor vCAT use. Each vcpu_clos will be mapped to a virtual CLOSID, the first vcpu_clos is mapped to virtual\nCLOSID 0 and the second is mapped to virtual CLOSID 1, etc."
+					"description": "By default (``virtual_cat_support`` is not specified):\nvcpu_clos is per-CPU and it configures each CPU in VMs to a desired CLOS ID in the ``VM`` section of the\nscenario file. Follow :ref:`rdt_detection_capabilities` to identify the maximum supported CLOS ID that can be used.\n\nIf ``virtual_cat_support`` is specified:\nvcpu_clos is not per-CPU anymore, just a list of physical CLOSIDs (minimum 2) that are assigned to VMs\nfor vCAT use. Each vcpu_clos will be mapped to a virtual CLOSID, the first vcpu_clos is mapped to virtual\nCLOSID 0 and the second is mapped to virtual CLOSID 1, etc."
 				}
 			}
 		},

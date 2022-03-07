@@ -1,9 +1,8 @@
 import os
 import json
 
-from pprint import pprint
 from collections import OrderedDict
-from functools import lru_cache as cache
+from pathlib import Path
 
 import xmltodict
 
@@ -257,9 +256,8 @@ class XS2JS:
 
 
 def main():
-    repo_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-
-    schema_file = os.path.join(repo_root, 'schema', 'sliced.xsd')
+    repo_root = Path(__file__).absolute().parent.parent
+    schema_file = repo_root.parent / 'schema' / 'sliced.xsd'
     json_schema = XS2JS(schema_file).get_json_schema()
     json_schema = json.dumps(json_schema, indent='\t')
     output_file = os.path.join(repo_root, 'src', 'assets', 'schema', 'scenario.json')
