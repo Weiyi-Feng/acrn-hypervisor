@@ -4,6 +4,7 @@ import sys
 import os
 import json
 import shlex
+import shutil
 import subprocess
 import argparse
 
@@ -182,17 +183,26 @@ def create_acrn_board_inspector_deb(version, build_dir):
 
 def create_configurator_deb(build_dir):
     cmd_list = []
+
+    # get folder path
     project_base = Path(__file__).parent.parent.parent
     configurator_path = Path(__file__).parent.parent / 'config_tools' / 'configurator'
+    deb_dir = configurator_path / 'src-tauri' / 'target' / 'release' / 'bundle' / 'deb'
+
+    # clean old directory
+    if os.path.isdir(deb_dir):
+        shutil.rmtree(deb_dir)
+
+    # build
     add_cmd_list(cmd_list, 'python3 schema_slicer.py', project_base / "misc" / "config_tools" / "scenario_config")
     add_cmd_list(cmd_list, 'python3 xs2js.py', project_base / "misc" / "config_tools" / "configurator" / "xs2js")
     add_cmd_list(cmd_list, 'yarn', configurator_path)
     add_cmd_list(cmd_list, 'yarn build', configurator_path)
     run_cmd_list(cmd_list)
-    deb_dir = configurator_path / 'src-tauri' / 'target' / 'release' / 'bundle' / 'deb'
+
     deb_name = [x for x in os.listdir(deb_dir) if x.endswith('.deb')]
     if not deb_name:
-        print('ERROR!No configurator deb found!')
+        print('ERROR! No acrn-configurator deb found!')
         return
     deb_name = deb_name[0]
     with open(deb_dir / deb_name, 'rb') as src:
