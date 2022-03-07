@@ -1,12 +1,11 @@
 import _ from "lodash";
 // import scenarioXSD from "../../schema/sliced.xsd";
-import {TauriLocalFSBackend, Helper, LocalStorageBackend} from "./helper";
+import {Helper, LocalStorageBackend, TauriLocalFSBackend} from "./helper";
 import {resolveHome} from "./common";
 
 import React from "react";
 import {path} from "@tauri-apps/api";
 // import {initPyodide, convertXSD} from "./runpy";
-
 import scenario from '../assets/schema/scenario.json'
 // initPyodide().then((pyodide) => {
 //     scenario = convertXSD(scenarioXSD)
@@ -328,7 +327,22 @@ export class ACRNConfigurator extends EventBase {
         this.vmSchemas = this.Schemas()
         this.hvSchema = this.vmSchemas.HV
         delete this.vmSchemas.HV
+
+        this.ivshmemEnum()
+        this.programLayer.register("scenarioDataUpdate", this.ivshmemEnum)
     }
+
+    ivshmemEnum = () => {
+        let odata = this.programLayer.getOriginScenarioData()
+        let vmNames = odata.vm.map((vmData) => {
+            return vmData.basic.name
+        })
+        if (vmNames.length === 0) {
+            vmNames = ['']
+        }
+        this.hvSchema.basic.definitions.VMNameType.enum = vmNames
+    }
+
 
     loadBoard = async (boardXMLPath, callback) => {
         let {shownName, boardXMLText, PCIDevices} = await this.programLayer.loadBoard(boardXMLPath)
