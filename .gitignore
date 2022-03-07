@@ -6,3 +6,5 @@ build
 *.warnings
 *.pyc
 /offline-tools/
+.idea
+venv

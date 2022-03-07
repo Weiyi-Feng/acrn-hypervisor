@@ -1,0 +1,2321 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"type": "object",
+	"required": [
+		"acrn-config"
+	],
+	"properties": {
+		"acrn-config": {
+			"$ref": "#/definitions/ACRNConfigType"
+		}
+	},
+	"additionalProperties": true,
+	"definitions": {
+		"Boolean": {
+			"type": "string",
+			"enum": [
+				"y",
+				"n"
+			]
+		},
+		"EnablementType": {
+			"type": "string",
+			"enum": [
+				"Enable",
+				"Disable"
+			]
+		},
+		"HexFormat": {
+			"type": "string",
+			"pattern": "^0[Xx][0-9A-Fa-f]+|0$"
+		},
+		"None": {
+			"type": "string",
+			"pattern": "^[*]{0}$"
+		},
+		"BuildType": {
+			"type": "string",
+			"enum": [
+				"release",
+				"debug"
+			]
+		},
+		"KernLoadAddr": {
+			"anyOf": [
+				{
+					"title": "None",
+					"type": "string",
+					"pattern": "^[*]{0}$"
+				},
+				{
+					"title": "HexFormat",
+					"type": "string",
+					"pattern": "^0[Xx][0-9A-Fa-f]+|0$"
+				}
+			]
+		},
+		"KernEntryAddr": {
+			"anyOf": [
+				{
+					"title": "None",
+					"type": "string",
+					"pattern": "^[*]{0}$"
+				},
+				{
+					"title": "HexFormat",
+					"type": "string",
+					"pattern": "^0[Xx][0-9A-Fa-f]+|0$"
+				}
+			]
+		},
+		"MaxMsixTableNumType": {
+			"type": "integer",
+			"minimum": 1,
+			"maximum": 2048
+		},
+		"MaxMsixTableSizeType": {
+			"anyOf": [
+				{
+					"title": "None",
+					"type": "string",
+					"pattern": "^[*]{0}$"
+				},
+				{
+					"title": "MaxMsixTableNumType",
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 2048
+				}
+			]
+		},
+		"MemorySizeType": {
+			"anyOf": [
+				{
+					"title": "HexFormat",
+					"type": "string",
+					"pattern": "^0[Xx][0-9A-Fa-f]+|0$"
+				}
+			]
+		},
+		"LogLevelType": {
+			"type": "string",
+			"enum": [
+				"0: None",
+				"1: Critical",
+				"2: Error",
+				"3: Warning",
+				"4: Information",
+				"5: Debug"
+			]
+		},
+		"SchedulerType": {
+			"type": "string",
+			"enum": [
+				"SCHED_NOOP",
+				"SCHED_IORR",
+				"SCHED_BVT",
+				"SCHED_PRIO"
+			]
+		},
+		"PriorityType": {
+			"type": "string",
+			"enum": [
+				"PRIO_LOW",
+				"PRIO_HIGH"
+			]
+		},
+		"SerialConsoleType": {
+			"type": "string",
+			"pattern": "^.*ttyS[\\d]+$"
+		},
+		"SerialConsoleOptions": {
+			"anyOf": [
+				{
+					"title": "None",
+					"type": "string",
+					"pattern": "^[*]{0}$"
+				},
+				{
+					"title": "SerialConsoleType",
+					"type": "string",
+					"pattern": "^.*ttyS[\\d]+$"
+				}
+			]
+		},
+		"VMNameType": {
+			"type": "string",
+			"pattern": "^([a-zA-Z0-9_\\-]){1,15}$"
+		},
+		"VBDFType": {
+			"type": "string",
+			"pattern": "^[0-9A-Fa-f]{1,2}:[0-1][0-9A-Fa-f].[0-7]$"
+		},
+		"IVSHMEMSize": {
+			"type": "integer",
+			"enum": [
+				2,
+				4,
+				8,
+				16,
+				32,
+				64,
+				128,
+				256,
+				512
+			]
+		},
+		"IVSHMEMType": {
+			"type": "string",
+			"enum": [
+				"Hypervisor",
+				"Device Model"
+			]
+		},
+		"LoadOrderType": {
+			"type": "string",
+			"enum": [
+				"SERVICE_VM",
+				"PRE_LAUNCHED_VM",
+				"POST_LAUNCHED_VM"
+			]
+		},
+		"VMType": {
+			"type": "string",
+			"enum": [
+				"RTVM",
+				"STANDARD_VM",
+				"TEE_VM",
+				"REE_VM"
+			]
+		},
+		"VMKernelType": {
+			"type": "string",
+			"enum": [
+				"KERNEL_BZIMAGE",
+				"KERNEL_RAWIMAGE",
+				"KERNEL_ELF"
+			]
+		},
+		"VuartType": {
+			"type": "string",
+			"enum": [
+				"legacy",
+				"pci"
+			]
+		},
+		"LegacyVuartType": {
+			"type": "string",
+			"enum": [
+				"VUART_LEGACY_PIO",
+				"VUART_PCI"
+			]
+		},
+		"LegacyVuartBase": {
+			"type": "string",
+			"enum": [
+				"SERVICE_VM_COM1_BASE",
+				"SERVICE_VM_COM2_BASE",
+				"SERVICE_VM_COM3_BASE",
+				"SERVICE_VM_COM4_BASE",
+				"COM1_BASE",
+				"COM2_BASE",
+				"COM3_BASE",
+				"COM4_BASE",
+				"CONFIG_COM_BASE",
+				"INVALID_COM_BASE"
+			]
+		},
+		"LegacyVuartIrq": {
+			"type": "string",
+			"enum": [
+				"SERVICE_VM_COM1_IRQ",
+				"SERVICE_VM_COM2_IRQ",
+				"SERVICE_VM_COM3_IRQ",
+				"SERVICE_VM_COM4_IRQ",
+				"COM1_IRQ",
+				"COM2_IRQ",
+				"COM3_IRQ",
+				"COM4_IRQ",
+				"CONFIG_COM_IRQ",
+				"0"
+			]
+		},
+		"PCIVuartBase": {
+			"type": "string",
+			"enum": [
+				"PCI_VUART",
+				"INVALID_PCI_BASE"
+			]
+		},
+		"ConsoleVuartConfigurationType": {
+			"type": "string",
+			"enum": [
+				"None",
+				"COM Port 1",
+				"COM Port 2",
+				"COM Port 3",
+				"COM Port 4",
+				"PCI"
+			]
+		},
+		"OSType": {
+			"type": "string",
+			"enum": [
+				"Non-Windows OS",
+				"Windows OS"
+			]
+		},
+		"IVSHMEMVM": {
+			"type": "object",
+			"required": [
+				"VM_NAME",
+				"VBDF"
+			],
+			"properties": {
+				"VM_NAME": {
+					"$ref": "#/definitions/VMNameType",
+					"title": "VM_NAME",
+					"description": "Name of the VM which use this IVSHMEM."
+				},
+				"VBDF": {
+					"$ref": "#/definitions/VBDFType",
+					"title": "VBDF",
+					"description": "Bus, Device and function of the virtual\ndevice in VM . Set in hex."
+				}
+			}
+		},
+		"IVSHMEMVMS": {
+			"type": "object",
+			"required": [
+				"IVSHMEM_VM"
+			],
+			"properties": {
+				"IVSHMEM_VM": {
+					"items": {
+						"$ref": "#/definitions/IVSHMEMVM"
+					},
+					"type": "array",
+					"title": "IVSHMEM_VM",
+					"description": "Set each VM which use this IVSHMEM."
+				}
+			}
+		},
+		"IVSHMEMRegionType": {
+			"type": "object",
+			"required": [
+				"NAME",
+				"KIND",
+				"IVSHMEM_SIZE",
+				"IVSHMEM_VMS"
+			],
+			"properties": {
+				"NAME": {
+					"type": "string",
+					"title": "Name",
+					"description": "Name of the shared memory region."
+				},
+				"KIND": {
+					"$ref": "#/definitions/IVSHMEMType",
+					"default": "Hypervisor",
+					"title": "Emulated by",
+					"description": "Name of the shared memory region."
+				},
+				"IVSHMEM_SIZE": {
+					"$ref": "#/definitions/IVSHMEMSize",
+					"default": 2,
+					"title": "Size",
+					"description": "Memory size of inter-VM shared memory (IVSHMEM)\nin megabytes. The value should be a power of 2\nand no more than 512."
+				},
+				"IVSHMEM_VMS": {
+					"$ref": "#/definitions/IVSHMEMVMS",
+					"title": "Shared VMs",
+					"description": "Set all VMs which use this IVSHMEM."
+				}
+			}
+		},
+		"IVSHMEMInfo": {
+			"type": "object",
+			"properties": {
+				"IVSHMEM_REGION": {
+					"items": {
+						"$ref": "#/definitions/IVSHMEMRegionType"
+					},
+					"type": "array",
+					"title": "IVSHMEM_REGION",
+					"description": "Set a inter-VM shared memory."
+				}
+			}
+		},
+		"RDTType": {
+			"type": "object",
+			"required": [
+				"RDT_ENABLED",
+				"CDP_ENABLED",
+				"VCAT_ENABLED"
+			],
+			"properties": {
+				"RDT_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Intel Resource Director Technology",
+					"description": "Enable the Intel Resource Director Technology (RDT)\nallocation feature. If the board hardware does not support\nRDT, setting this option to ``y`` is ignored."
+				},
+				"CDP_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Code and Data Prioritization",
+					"description": "Specify whether to enable Code and Data Prioritization (CDP).\nCDP is an extension of CAT. Set to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CDP."
+				},
+				"VCAT_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "VCAT_ENABLED",
+					"description": "Specify whether to enable CAT virtualization (vCAT).\nSet to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CAT."
+				},
+				"CLOS_MASK": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"title": "CLOS_MASK",
+					"description": "Specify the cache capacity bitmask for the CLOS; only continuous '1' bits\nare allowed. The value will be ignored when hardware does not support RDT.\nThis option takes effect only if :option:`hv.FEATURES.RDT.RDT_ENABLED` is set to ``y``.\nAs :option:`vm.clos.vcpu_clos` specifies the index of the CLOS to be associated with the given vCPU,\n:option:`hv.FEATURES.RDT.CLOS_MASK` of that CLOS would impact the performance of the given vCPU."
+				},
+				"MBA_DELAY": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"title": "MBA_DELAY",
+					"description": "Memory Bandwidth Allocation delay value."
+				}
+			}
+		},
+		"SSRAMInfo": {
+			"type": "object",
+			"required": [
+				"SSRAM_ENABLED"
+			],
+			"properties": {
+				"SSRAM_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Software SRAM (for real-time apps)",
+					"description": "Enable the Software SRAM feature for real-time VMs. This feature reserves memory buffers as always-cached memory for improved VM performance."
+				}
+			}
+		},
+		"CPUAffinityConfiguration": {
+			"type": "object",
+			"required": [
+				"pcpu_id"
+			],
+			"properties": {
+				"pcpu_id": {
+					"type": "array",
+					"items": {
+						"type": "integer",
+						"default": 2
+					},
+					"title": "pcpu_id",
+					"description": "A pCPU that this VM's vCPU is allowed to pin\nto."
+				}
+			}
+		},
+		"CLOSConfiguration": {
+			"type": "object",
+			"required": [
+				"vcpu_clos"
+			],
+			"properties": {
+				"vcpu_clos": {
+					"type": "array",
+					"items": {
+						"type": "integer",
+						"default": 0
+					},
+					"title": "vcpu_clos",
+					"description": "By default (``GUEST_FLAG_VCAT_ENABLED`` is not specified):\nvcpu_clos is per-CPU and it configures each CPU in VMs to a desired CLOS ID in the ``VM`` section of the\nscenario file. Follow :ref:`rdt_detection_capabilities` to identify the maximum supported CLOS ID that can be used.\n\nIf ``GUEST_FLAG_VCAT_ENABLED`` is specified:\nvcpu_clos is not per-CPU anymore, just a list of physical CLOSIDs (minimum 2) that are assigned to VMs\nfor vCAT use. Each vcpu_clos will be mapped to a virtual CLOSID, the first vcpu_clos is mapped to virtual\nCLOSID 0 and the second is mapped to virtual CLOSID 1, etc."
+				}
+			}
+		},
+		"EPCSection": {
+			"type": "object",
+			"required": [
+				"base",
+				"size"
+			],
+			"properties": {
+				"base": {
+					"$ref": "#/definitions/HexFormat",
+					"default": 0,
+					"title": "base",
+					"description": "Specify SGX EPC section base, must be page aligned. (Default value is 0)"
+				},
+				"size": {
+					"$ref": "#/definitions/HexFormat",
+					"default": 0,
+					"title": "size",
+					"description": "Specify SGX EPC section size in Bytes, must be page aligned. (Default value is 0)"
+				}
+			}
+		},
+		"MemoryInfo": {
+			"type": "object",
+			"required": [
+				"whole",
+				"start_hpa"
+			],
+			"properties": {
+				"whole": {
+					"type": "integer",
+					"default": 256,
+					"title": "VM physical memory allocation (MB)",
+					"description": "Specify the physical memory allocated to this VM in Megabytes."
+				},
+				"start_hpa": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x100000000",
+					"title": "start_hpa",
+					"description": "The starting physical address in host for the VM."
+				},
+				"size": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x20000000",
+					"title": "size",
+					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+				},
+				"start_hpa2": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x0",
+					"title": "start_hpa2",
+					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+				},
+				"size_hpa2": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x0",
+					"title": "size_hpa2",
+					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+				}
+			}
+		},
+		"OSConfigurations": {
+			"type": "object",
+			"required": [
+				"kern_type",
+				"kern_mod"
+			],
+			"properties": {
+				"kern_type": {
+					"$ref": "#/definitions/VMKernelType",
+					"title": "Kernel image type",
+					"description": "Specify the kernel image type so the hypervisor can load it correctly."
+				},
+				"kern_mod": {
+					"type": "string",
+					"title": "Kernel module tag",
+					"description": "Enter the tag for the kernel image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline."
+				},
+				"ramdisk_mod": {
+					"type": "string",
+					"title": "RAMdisk module tag",
+					"description": "Specify the tag for the ramdisk image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline."
+				},
+				"bootargs": {
+					"type": "string",
+					"title": "Kernel boot arguments",
+					"description": "Specify configurable boot argument for pre-launched or Service VM."
+				}
+			}
+		},
+		"VuartEndpointType": {
+			"type": "object",
+			"required": [
+				"vm_name",
+				"io_port"
+			],
+			"properties": {
+				"vm_name": {
+					"type": "string"
+				},
+				"io_port": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x3F"
+				},
+				"vbdf": {
+					"items": {
+						"$ref": "#/definitions/VBDFType"
+					},
+					"type": "array",
+					"maxItems": 1
+				}
+			}
+		},
+		"VuartConnectionType": {
+			"type": "object",
+			"required": [
+				"name",
+				"type",
+				"endpoint"
+			],
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"type": {
+					"$ref": "#/definitions/VuartType",
+					"default": "legacy"
+				},
+				"endpoint": {
+					"minItems": 2,
+					"items": {
+						"$ref": "#/definitions/VuartEndpointType"
+					},
+					"type": "array",
+					"maxItems": 2
+				}
+			}
+		},
+		"VuartConnectionsType": {
+			"type": "object",
+			"properties": {
+				"vuart_connection": {
+					"items": {
+						"$ref": "#/definitions/VuartConnectionType"
+					},
+					"type": "array"
+				}
+			}
+		},
+		"LegacyVuartConfiguration": {
+			"type": "object",
+			"required": [
+				"type",
+				"base",
+				"irq"
+			],
+			"properties": {
+				"type": {
+					"$ref": "#/definitions/LegacyVuartType",
+					"default": "VUART_LEGACY_PIO",
+					"title": "type",
+					"description": "vUART (COM) type; only legacy PIO mode is\nsupported."
+				},
+				"base": {
+					"$ref": "#/definitions/LegacyVuartBase",
+					"title": "base",
+					"description": "vUART (COM) enabling switch. Enable by exposing its COM_BASE\n(e.b., ``SERVICE_VM_COM1_BASE`` for Service VM); disable by returning\n``INVALID_COM_BASE``."
+				},
+				"irq": {
+					"$ref": "#/definitions/LegacyVuartIrq",
+					"title": "irq",
+					"description": "vCOM IRQ."
+				},
+				"target_vm_id": {
+					"type": "integer",
+					"default": 1,
+					"title": "target_vm_id",
+					"description": "COM2 is used for VM communications. When it is enabled, specify which\ntarget VM the current VM connects to."
+				},
+				"target_uart_id": {
+					"type": "integer",
+					"default": 1,
+					"title": "target_uart_id",
+					"description": "Target vUART ID to which the vCOM2 connects."
+				}
+			}
+		},
+		"ConsoleVuartConfiguration": {
+			"type": "object",
+			"required": [
+				"base"
+			],
+			"properties": {
+				"base": {
+					"$ref": "#/definitions/PCIVuartBase",
+					"default": "INVALID_PCI_BASE",
+					"title": "base",
+					"description": "Console vUART (A.K.A PCI based vUART) enabling switch.\nEnable by specifying PCI_VUART; disable by specifying\n``INVALID_PCI_BASE``."
+				}
+			}
+		},
+		"CommunicationVuartConfiguration": {
+			"type": "object",
+			"required": [
+				"base",
+				"target_vm_id",
+				"target_uart_id"
+			],
+			"properties": {
+				"base": {
+					"$ref": "#/definitions/PCIVuartBase",
+					"default": "INVALID_PCI_BASE",
+					"title": "base",
+					"description": "Communication vUART (A.K.A PCI based vUART) enabling switch.\nEnable by specifying PCI_VUART; disable by specifying\n``INVALID_PCI_BASE``."
+				},
+				"target_vm_id": {
+					"type": "integer",
+					"title": "target_vm_id",
+					"description": "specify which target VM the current VM connects to."
+				},
+				"target_uart_id": {
+					"type": "integer",
+					"title": "target_uart_id",
+					"description": "Target vUART ID to which the ``communication_vuart`` connects."
+				}
+			}
+		},
+		"MMIOResourcesConfiguration": {
+			"type": "object",
+			"properties": {
+				"TPM2": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Trusted Platform Module passthrough",
+					"description": "Passthrough the Trusted Platform Module (TPM2) device to this VM. (Optional) (Default value is n)"
+				},
+				"p2sb": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Primary-to-Sideband bridge passthrough",
+					"description": "Passthrough the P2SB (Primary-to-Sideband) bridge register access BAR to the this VM. (Optional) (Default value is n)"
+				}
+			}
+		},
+		"PCIDevsConfiguration": {
+			"type": "object",
+			"properties": {
+				"pci_dev": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"title": "PCI device assignment",
+					"description": "Select the PCI devices you want to assign to this virtual machine."
+				}
+			}
+		},
+		"DebugOptionsType": {
+			"type": "object",
+			"required": [
+				"BUILD_TYPE",
+				"SERIAL_CONSOLE",
+				"MEM_LOGLEVEL",
+				"NPK_LOGLEVEL",
+				"CONSOLE_LOGLEVEL"
+			],
+			"properties": {
+				"BUILD_TYPE": {
+					"$ref": "#/definitions/BuildType",
+					"default": "debug",
+					"title": "Build type",
+					"description": "Identify build type.  Debug mode enables debug shell, prints, and logs.  Release mode optimizes the ACRN binary for deployment and turns off all debug infrastructure.  These can only be changed at build time."
+				},
+				"SERIAL_CONSOLE": {
+					"$ref": "#/definitions/SerialConsoleOptions",
+					"title": "Serial console port",
+					"description": "Specify the host serial device used for hypervisor debugging."
+				},
+				"MEM_LOGLEVEL": {
+					"$ref": "#/definitions/LogLevelType",
+					"default": "0: None",
+					"title": "ACRN log level",
+					"description": "Specify default log level for log messages stored in memory. Value can be changed at runtime.  Log messages with the selected value or lower are displayed."
+				},
+				"NPK_LOGLEVEL": {
+					"$ref": "#/definitions/LogLevelType",
+					"default": "0: None",
+					"title": "Intel Trace Hub log level",
+					"description": "Specify default log level for the hypervisor via Intel Trace Hub log.  Use the Intel Trace Hub's memory to record log messages.  Value can be changed at runtime.   Log messages with the selected value or lower are displayed."
+				},
+				"CONSOLE_LOGLEVEL": {
+					"$ref": "#/definitions/LogLevelType",
+					"default": "0: None",
+					"title": "Serial console log level",
+					"description": "Specify default log level for log messages written to the serial console.  Log messages with the selected value or lower are displayed."
+				}
+			}
+		},
+		"FeatureOptionsType": {
+			"type": "object",
+			"required": [
+				"RELOC",
+				"SCHEDULER",
+				"MULTIBOOT2",
+				"ENFORCE_TURNOFF_AC",
+				"ENFORCE_TURNOFF_GP",
+				"SECURITY_VM_FIXUP",
+				"KEEP_IRQ_DISABLED",
+				"RDT",
+				"HYPERV_ENABLED",
+				"IOMMU_ENFORCE_SNP",
+				"ACPI_PARSE_ENABLED",
+				"L1D_VMENTRY_ENABLED",
+				"MCE_ON_PSC_DISABLED",
+				"IVSHMEM"
+			],
+			"properties": {
+				"RELOC": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Hypervisor relocation in memory",
+					"description": "Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware."
+				},
+				"SCHEDULER": {
+					"$ref": "#/definitions/SchedulerType",
+					"default": "SCHED_BVT",
+					"title": "Scheduler and workload prioritization",
+					"description": "Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU."
+				},
+				"MULTIBOOT2": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Enable Multiboot2",
+					"description": "Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code."
+				},
+				"ENFORCE_TURNOFF_AC": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Split lock detection",
+					"description": "Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance."
+				},
+				"ENFORCE_TURNOFF_GP": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Prevent system bus locking",
+					"description": "Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance."
+				},
+				"SECURITY_VM_FIXUP": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "SECURITY_VM_FIXUP",
+					"description": "Enable to do fixup for TPM2 and SMBIOS for Security VM. If no Security VM, setting this option to ``n``"
+				},
+				"KEEP_IRQ_DISABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "KEEP_IRQ_DISABLED",
+					"description": "If ``y``, permanently disables all interrupts in HV root mode."
+				},
+				"RDT": {
+					"$ref": "#/definitions/RDTType",
+					"title": "Intel Resource Director Technology",
+					"description": "Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs."
+				},
+				"HYPERV_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "TLFS support for Windows",
+					"description": "Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support."
+				},
+				"IOMMU_ENFORCE_SNP": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "IOMMU_ENFORCE_SNP",
+					"description": "Specify if the IOMMU enforces snoop behavior of DMA operations."
+				},
+				"ACPI_PARSE_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Parse ACPI tables at runtime",
+					"description": "Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file."
+				},
+				"L1D_VMENTRY_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Mitigate L1 terminal fault",
+					"description": "Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache."
+				},
+				"MCE_ON_PSC_DISABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "MCE workaround",
+					"description": "Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families)."
+				},
+				"IVSHMEM": {
+					"$ref": "#/definitions/IVSHMEMInfo",
+					"title": "Inter-VM shared memory",
+					"description": ""
+				},
+				"SSRAM": {
+					"$ref": "#/definitions/SSRAMInfo",
+					"title": "Software SRAM (for real-time apps)",
+					"description": ""
+				}
+			}
+		},
+		"MemoryOptionsType": {
+			"type": "object",
+			"required": [
+				"STACK_SIZE",
+				"HV_RAM_START"
+			],
+			"properties": {
+				"STACK_SIZE": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x2000",
+					"title": "Stack size (in byte)",
+					"description": "Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions."
+				},
+				"HV_RAM_START": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x00400000",
+					"title": "HV_RAM_START",
+					"description": "The 2MB-aligned starting physical address of the RAM region used by the hypervisor."
+				}
+			}
+		},
+		"CapacitiesOptionsType": {
+			"type": "object",
+			"required": [
+				"MAX_VM_NUM",
+				"IOMMU_BUS_NUM",
+				"MAX_IOAPIC_NUM",
+				"MAX_PCI_DEV_NUM",
+				"MAX_IOAPIC_LINES",
+				"MAX_PT_IRQ_ENTRIES",
+				"MAX_MSIX_TABLE_NUM",
+				"MAX_EMULATED_MMIO"
+			],
+			"properties": {
+				"MAX_VM_NUM": {
+					"type": "integer",
+					"default": 16,
+					"title": "MAX_VM_NUM",
+					"description": "Maximum number of User VMs allowed."
+				},
+				"IOMMU_BUS_NUM": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x100",
+					"title": "IOMMU_BUS_NUM",
+					"description": "Highest PCI bus ID used during IOMMU initialization."
+				},
+				"MAX_IOAPIC_NUM": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 10,
+					"default": 1,
+					"title": "MAX_IOAPIC_NUM",
+					"description": "Maximum number of IOAPICs."
+				},
+				"MAX_PCI_DEV_NUM": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 1024,
+					"default": 96,
+					"title": "Maximum number of PCI devices",
+					"description": "Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)"
+				},
+				"MAX_IOAPIC_LINES": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 120,
+					"default": 120,
+					"title": "MAX_IOAPIC_LINES",
+					"description": "Maximum number of interrupt lines per IOAPIC."
+				},
+				"MAX_PT_IRQ_ENTRIES": {
+					"type": "integer",
+					"default": 256,
+					"title": "MAX_PT_IRQ_ENTRIES",
+					"description": "The pre-defined number of interrupt sources of all pass-through devices."
+				},
+				"MAX_MSIX_TABLE_NUM": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 2048,
+					"default": 64,
+					"title": "MAX_MSIX_TABLE_NUM",
+					"description": "Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)"
+				},
+				"MAX_EMULATED_MMIO": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 128,
+					"default": 16,
+					"title": "MAX_EMULATED_MMIO",
+					"description": "Specify maximum number of emulated MMIO regions. (Default value is 16)"
+				}
+			}
+		},
+		"MiscCfgOptionsType": {
+			"type": "object",
+			"required": [
+				"GPU_SBDF"
+			],
+			"properties": {
+				"GPU_SBDF": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x00000010",
+					"title": "GPU_SBDF",
+					"description": "Segment, Bus, Device, and function of the GPU."
+				}
+			}
+		},
+		"HVConfigType": {
+			"type": "object",
+			"required": [
+				"DEBUG_OPTIONS",
+				"FEATURES",
+				"MEMORY",
+				"CAPACITIES",
+				"MISC_CFG",
+				"vuart_connections"
+			],
+			"properties": {
+				"DEBUG_OPTIONS": {
+					"$ref": "#/definitions/DebugOptionsType",
+					"title": "Debug options",
+					"description": "Configure the debug facilities."
+				},
+				"FEATURES": {
+					"$ref": "#/definitions/FeatureOptionsType",
+					"title": "Hypervisor features",
+					"description": "Enable hypervisor features."
+				},
+				"MEMORY": {
+					"$ref": "#/definitions/MemoryOptionsType",
+					"title": "Memory options",
+					"description": "Configure memory used by the hypervisor."
+				},
+				"CAPACITIES": {
+					"$ref": "#/definitions/CapacitiesOptionsType",
+					"title": "Hypervisor capacities",
+					"description": "Configure the capacities of the hypervisor."
+				},
+				"MISC_CFG": {
+					"$ref": "#/definitions/MiscCfgOptionsType"
+				},
+				"vuart_connections": {
+					"$ref": "#/definitions/VuartConnectionsType",
+					"title": "Virtual UART connection",
+					"description": "Specify the vUART (aka COM) with the vUART ID by its ``id`` attribute.\nRefer to :ref:`vuart_config` for detailed vUART settings."
+				}
+			}
+		},
+		"VMConfigType": {
+			"type": "object",
+			"required": [
+				"load_order",
+				"vm_type",
+				"name",
+				"clos",
+				"memory",
+				"priority",
+				"companion_vmid",
+				"console_vuart",
+				"os_type",
+				"vbootloader",
+				"vuart0",
+				"virtio_devices"
+			],
+			"properties": {
+				"load_order": {
+					"$ref": "#/definitions/LoadOrderType",
+					"title": "Load order",
+					"description": "Specify the load_order."
+				},
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"secure_world_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "secure_world_support",
+					"description": "Specify secure world support for trustry OS."
+				},
+				"hide_mtrr_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "hide_mtrr_support",
+					"description": "Specify MTRR capability to hide for VM."
+				},
+				"security_vm": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "security_vm",
+					"description": "Specify TPM2 FIXUP for VM."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"epc_section": {
+					"$ref": "#/definitions/EPCSection",
+					"title": "epc_section",
+					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+				},
+				"memory": {
+					"$ref": "#/definitions/MemoryInfo",
+					"title": "memory",
+					"description": "Specify memory information for Service and User VMs."
+				},
+				"priority": {
+					"$ref": "#/definitions/PriorityType",
+					"default": "PRIO_LOW",
+					"title": "priority",
+					"description": "Specify the VM vCPU priority for scheduling."
+				},
+				"companion_vmid": {
+					"type": "integer",
+					"default": 65535,
+					"title": "companion_vmid",
+					"description": "Specify the companion VM id of this VM."
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "General information for host kernel, boot\nargument and memory."
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"title": "console_vuart",
+					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pt_intx": {
+					"type": "string",
+					"title": "pt_intx",
+					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				},
+				"os_type": {
+					"$ref": "#/definitions/OSType",
+					"default": "Non-Windows OS",
+					"title": "OS type",
+					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+				},
+				"vbootloader": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "OVMF (Open Virtual Machine Firmware)",
+					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+				},
+				"vuart0": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "Emulate COM1 as standard I/O",
+					"description": "Enable ACRN Device Model to emulate COM1 as a User VM standard IO."
+				},
+				"usb_xhci": {
+					"type": "string",
+					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
+					"title": "usb_xhci",
+					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+				},
+				"virtio_devices": {
+					"type": "object",
+					"properties": {
+						"console": {
+							"type": "string",
+							"title": "console",
+							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+						},
+						"network": {
+							"type": "string",
+							"title": "network",
+							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+						},
+						"input": {
+							"type": "string",
+							"title": "input",
+							"description": "The virtio input device setting."
+						},
+						"block": {
+							"type": "string",
+							"title": "block",
+							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+						}
+					},
+					"title": "Virt-IO devices",
+					"description": "Enable virt-IO devices in post-launched VMs."
+				}
+			}
+		},
+		"ACRNConfigType": {
+			"type": "object",
+			"required": [
+				"hv"
+			],
+			"properties": {
+				"hv": {
+					"$ref": "#/definitions/HVConfigType",
+					"title": "hv",
+					"description": "The hypervisor configuration defines a working scenario and target\nboard by configuring the hypervisor image features and capabilities such as\nsetting up the log and the serial port."
+				}
+			}
+		},
+		"PreLaunchedMemoryInfo": {
+			"type": "object",
+			"required": [
+				"start_hpa"
+			],
+			"properties": {
+				"start_hpa": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x100000000",
+					"title": "start_hpa",
+					"description": "The starting physical address in host for the VM."
+				},
+				"size": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x20000000",
+					"title": "size",
+					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+				},
+				"start_hpa2": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x0",
+					"title": "start_hpa2",
+					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+				},
+				"size_hpa2": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x0",
+					"title": "size_hpa2",
+					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+				}
+			}
+		},
+		"PreLaunchedVMConfigType": {
+			"type": "object",
+			"required": [
+				"load_order",
+				"vm_type",
+				"name",
+				"clos",
+				"memory",
+				"priority",
+				"companion_vmid",
+				"console_vuart"
+			],
+			"properties": {
+				"load_order": {
+					"$ref": "#/definitions/LoadOrderType",
+					"title": "Load order",
+					"description": "Specify the load_order."
+				},
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"secure_world_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "secure_world_support",
+					"description": "Specify secure world support for trustry OS."
+				},
+				"hide_mtrr_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "hide_mtrr_support",
+					"description": "Specify MTRR capability to hide for VM."
+				},
+				"security_vm": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "security_vm",
+					"description": "Specify TPM2 FIXUP for VM."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"epc_section": {
+					"$ref": "#/definitions/EPCSection",
+					"title": "epc_section",
+					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+				},
+				"memory": {
+					"$ref": "#/definitions/PreLaunchedMemoryInfo",
+					"title": "memory",
+					"description": "Specify memory information for Service and User VMs."
+				},
+				"priority": {
+					"$ref": "#/definitions/PriorityType",
+					"default": "PRIO_LOW",
+					"title": "priority",
+					"description": "Specify the VM vCPU priority for scheduling."
+				},
+				"companion_vmid": {
+					"type": "integer",
+					"default": 65535,
+					"title": "companion_vmid",
+					"description": "Specify the companion VM id of this VM."
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "General information for host kernel, boot\nargument and memory."
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"title": "console_vuart",
+					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pt_intx": {
+					"type": "string",
+					"title": "pt_intx",
+					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				}
+			}
+		},
+		"ServiceMemoryInfo": {
+			"type": "object",
+			"required": [
+				"start_hpa"
+			],
+			"properties": {
+				"start_hpa": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x100000000",
+					"title": "start_hpa",
+					"description": "The starting physical address in host for the VM."
+				},
+				"size": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x20000000",
+					"title": "size",
+					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+				},
+				"start_hpa2": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x0",
+					"title": "start_hpa2",
+					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+				},
+				"size_hpa2": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x0",
+					"title": "size_hpa2",
+					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+				}
+			}
+		},
+		"ServiceVMConfigType": {
+			"type": "object",
+			"required": [
+				"load_order",
+				"vm_type",
+				"name",
+				"clos",
+				"memory",
+				"priority",
+				"companion_vmid",
+				"console_vuart"
+			],
+			"properties": {
+				"load_order": {
+					"$ref": "#/definitions/LoadOrderType",
+					"title": "Load order",
+					"description": "Specify the load_order."
+				},
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"secure_world_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "secure_world_support",
+					"description": "Specify secure world support for trustry OS."
+				},
+				"hide_mtrr_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "hide_mtrr_support",
+					"description": "Specify MTRR capability to hide for VM."
+				},
+				"security_vm": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "security_vm",
+					"description": "Specify TPM2 FIXUP for VM."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"memory": {
+					"$ref": "#/definitions/ServiceMemoryInfo",
+					"title": "memory",
+					"description": "Specify memory information for Service and User VMs."
+				},
+				"priority": {
+					"$ref": "#/definitions/PriorityType",
+					"default": "PRIO_LOW",
+					"title": "priority",
+					"description": "Specify the VM vCPU priority for scheduling."
+				},
+				"companion_vmid": {
+					"type": "integer",
+					"default": 65535,
+					"title": "companion_vmid",
+					"description": "Specify the companion VM id of this VM."
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "General information for host kernel, boot\nargument and memory."
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"title": "console_vuart",
+					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				}
+			}
+		},
+		"PostLaunchedMemoryInfo": {
+			"type": "object",
+			"required": [
+				"whole"
+			],
+			"properties": {
+				"whole": {
+					"type": "integer",
+					"default": 256,
+					"title": "VM physical memory allocation (MB)",
+					"description": "Specify the physical memory allocated to this VM in Megabytes."
+				}
+			}
+		},
+		"PostLaunchedVMConfigType": {
+			"type": "object",
+			"required": [
+				"load_order",
+				"vm_type",
+				"name",
+				"clos",
+				"memory",
+				"priority",
+				"companion_vmid",
+				"console_vuart",
+				"os_type",
+				"vbootloader",
+				"vuart0",
+				"virtio_devices"
+			],
+			"properties": {
+				"load_order": {
+					"$ref": "#/definitions/LoadOrderType",
+					"title": "Load order",
+					"description": "Specify the load_order."
+				},
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"secure_world_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "secure_world_support",
+					"description": "Specify secure world support for trustry OS."
+				},
+				"hide_mtrr_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "hide_mtrr_support",
+					"description": "Specify MTRR capability to hide for VM."
+				},
+				"security_vm": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "security_vm",
+					"description": "Specify TPM2 FIXUP for VM."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"memory": {
+					"$ref": "#/definitions/PostLaunchedMemoryInfo",
+					"title": "memory",
+					"description": "Specify memory information for Service and User VMs."
+				},
+				"priority": {
+					"$ref": "#/definitions/PriorityType",
+					"default": "PRIO_LOW",
+					"title": "priority",
+					"description": "Specify the VM vCPU priority for scheduling."
+				},
+				"companion_vmid": {
+					"type": "integer",
+					"default": 65535,
+					"title": "companion_vmid",
+					"description": "Specify the companion VM id of this VM."
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"title": "console_vuart",
+					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				},
+				"os_type": {
+					"$ref": "#/definitions/OSType",
+					"default": "Non-Windows OS",
+					"title": "OS type",
+					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+				},
+				"vbootloader": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "OVMF (Open Virtual Machine Firmware)",
+					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+				},
+				"vuart0": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "Emulate COM1 as standard I/O",
+					"description": "Enable ACRN Device Model to emulate COM1 as a User VM standard IO."
+				},
+				"usb_xhci": {
+					"type": "string",
+					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
+					"title": "usb_xhci",
+					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+				},
+				"virtio_devices": {
+					"type": "object",
+					"properties": {
+						"console": {
+							"type": "string",
+							"title": "console",
+							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+						},
+						"network": {
+							"type": "string",
+							"title": "network",
+							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+						},
+						"input": {
+							"type": "string",
+							"title": "input",
+							"description": "The virtio input device setting."
+						},
+						"block": {
+							"type": "string",
+							"title": "block",
+							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+						}
+					},
+					"title": "Virt-IO devices",
+					"description": "Enable virt-IO devices in post-launched VMs."
+				}
+			}
+		},
+		"VMBasicConfigType": {
+			"type": "object",
+			"required": [
+				"vm_type",
+				"name",
+				"os_type",
+				"vbootloader",
+				"virtio_devices"
+			],
+			"properties": {
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				},
+				"os_type": {
+					"$ref": "#/definitions/OSType",
+					"default": "Non-Windows OS",
+					"title": "OS type",
+					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+				},
+				"vbootloader": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "OVMF (Open Virtual Machine Firmware)",
+					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+				},
+				"usb_xhci": {
+					"type": "string",
+					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
+					"title": "usb_xhci",
+					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+				},
+				"virtio_devices": {
+					"type": "object",
+					"properties": {
+						"console": {
+							"type": "string",
+							"title": "console",
+							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+						},
+						"network": {
+							"type": "string",
+							"title": "network",
+							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+						},
+						"input": {
+							"type": "string",
+							"title": "input",
+							"description": "The virtio input device setting."
+						},
+						"block": {
+							"type": "string",
+							"title": "block",
+							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+						}
+					},
+					"title": "Virt-IO devices",
+					"description": "Enable virt-IO devices in post-launched VMs."
+				}
+			}
+		},
+		"PreLaunchedVMBasicConfigType": {
+			"type": "object",
+			"required": [
+				"vm_type",
+				"name"
+			],
+			"properties": {
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				}
+			}
+		},
+		"ServiceVMBasicConfigType": {
+			"type": "object",
+			"required": [
+				"vm_type",
+				"name"
+			],
+			"properties": {
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				}
+			}
+		},
+		"PostLaunchedVMBasicConfigType": {
+			"type": "object",
+			"required": [
+				"vm_type",
+				"name",
+				"os_type",
+				"vbootloader",
+				"virtio_devices"
+			],
+			"properties": {
+				"vm_type": {
+					"$ref": "#/definitions/VMType",
+					"title": "VM type",
+					"description": "Specify the VM type."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"maxLength": 15,
+					"pattern": "^\\S+$",
+					"title": "VM name",
+					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "List of pCPU that this VM's vCPUs are pinned to."
+				},
+				"mmio_resources": {
+					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"title": "mmio_resources",
+					"description": "MMIO resources to passthrough."
+				},
+				"pci_devs": {
+					"$ref": "#/definitions/PCIDevsConfiguration",
+					"title": "PCI device assignment",
+					"description": ""
+				},
+				"os_type": {
+					"$ref": "#/definitions/OSType",
+					"default": "Non-Windows OS",
+					"title": "OS type",
+					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+				},
+				"vbootloader": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "OVMF (Open Virtual Machine Firmware)",
+					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+				},
+				"usb_xhci": {
+					"type": "string",
+					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
+					"title": "usb_xhci",
+					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+				},
+				"virtio_devices": {
+					"type": "object",
+					"properties": {
+						"console": {
+							"type": "string",
+							"title": "console",
+							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+						},
+						"network": {
+							"type": "string",
+							"title": "network",
+							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+						},
+						"input": {
+							"type": "string",
+							"title": "input",
+							"description": "The virtio input device setting."
+						},
+						"block": {
+							"type": "string",
+							"title": "block",
+							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+						}
+					},
+					"title": "Virt-IO devices",
+					"description": "Enable virt-IO devices in post-launched VMs."
+				}
+			}
+		},
+		"BasicFeatureOptionsType": {
+			"type": "object",
+			"required": [
+				"IVSHMEM"
+			],
+			"properties": {
+				"IVSHMEM": {
+					"$ref": "#/definitions/IVSHMEMInfo",
+					"title": "Inter-VM shared memory",
+					"description": ""
+				}
+			}
+		},
+		"HVBasicConfigType": {
+			"type": "object",
+			"required": [
+				"DEBUG_OPTIONS",
+				"FEATURES"
+			],
+			"properties": {
+				"DEBUG_OPTIONS": {
+					"$ref": "#/definitions/DebugOptionsType",
+					"title": "Debug options",
+					"description": "Configure the debug facilities."
+				},
+				"FEATURES": {
+					"$ref": "#/definitions/BasicFeatureOptionsType",
+					"title": "Hypervisor features",
+					"description": "Enable hypervisor features."
+				}
+			}
+		},
+		"VMAdvancedConfigType": {
+			"type": "object",
+			"required": [
+				"clos"
+			],
+			"properties": {
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"epc_section": {
+					"$ref": "#/definitions/EPCSection",
+					"title": "epc_section",
+					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+				},
+				"pt_intx": {
+					"type": "string",
+					"title": "pt_intx",
+					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				}
+			}
+		},
+		"PreLaunchedVMAdvancedConfigType": {
+			"type": "object",
+			"required": [
+				"clos"
+			],
+			"properties": {
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"epc_section": {
+					"$ref": "#/definitions/EPCSection",
+					"title": "epc_section",
+					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+				},
+				"pt_intx": {
+					"type": "string",
+					"title": "pt_intx",
+					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				}
+			}
+		},
+		"ServiceVMAdvancedConfigType": {
+			"type": "object",
+			"required": [
+				"clos"
+			],
+			"properties": {
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				}
+			}
+		},
+		"PostLaunchedVMAdvancedConfigType": {
+			"type": "object",
+			"required": [
+				"clos"
+			],
+			"properties": {
+				"lapic_passthrough": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "LAPIC passthrough",
+					"description": "Specify LAPIC to passthrough."
+				},
+				"io_completion_polling": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "I/O completion polling",
+					"description": "Specify Polling mode for IO Completion."
+				},
+				"nested_virtualization_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Nested virtualization support",
+					"description": "Specify nested virtualization support for KVM."
+				},
+				"virtual_cat_support": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Virtual CAT support",
+					"description": "Specify virtual CAT support for VM."
+				},
+				"clos": {
+					"$ref": "#/definitions/CLOSConfiguration",
+					"title": "clos",
+					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+				},
+				"PTM": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Precision Time Measurement",
+					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+				}
+			}
+		},
+		"AdvancedFeatureOptionsType": {
+			"type": "object",
+			"required": [
+				"RELOC",
+				"SCHEDULER",
+				"MULTIBOOT2",
+				"ENFORCE_TURNOFF_AC",
+				"ENFORCE_TURNOFF_GP",
+				"RDT",
+				"HYPERV_ENABLED",
+				"ACPI_PARSE_ENABLED",
+				"L1D_VMENTRY_ENABLED",
+				"MCE_ON_PSC_DISABLED"
+			],
+			"properties": {
+				"RELOC": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Hypervisor relocation in memory",
+					"description": "Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware."
+				},
+				"SCHEDULER": {
+					"$ref": "#/definitions/SchedulerType",
+					"default": "SCHED_BVT",
+					"title": "Scheduler and workload prioritization",
+					"description": "Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU."
+				},
+				"MULTIBOOT2": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Enable Multiboot2",
+					"description": "Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code."
+				},
+				"ENFORCE_TURNOFF_AC": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Split lock detection",
+					"description": "Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance."
+				},
+				"ENFORCE_TURNOFF_GP": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Prevent system bus locking",
+					"description": "Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance."
+				},
+				"RDT": {
+					"$ref": "#/definitions/RDTType",
+					"title": "Intel Resource Director Technology",
+					"description": "Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs."
+				},
+				"HYPERV_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "TLFS support for Windows",
+					"description": "Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support."
+				},
+				"ACPI_PARSE_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Parse ACPI tables at runtime",
+					"description": "Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file."
+				},
+				"L1D_VMENTRY_ENABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "Mitigate L1 terminal fault",
+					"description": "Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache."
+				},
+				"MCE_ON_PSC_DISABLED": {
+					"$ref": "#/definitions/Boolean",
+					"default": "y",
+					"title": "MCE workaround",
+					"description": "Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families)."
+				},
+				"SSRAM": {
+					"$ref": "#/definitions/SSRAMInfo",
+					"title": "Software SRAM (for real-time apps)",
+					"description": ""
+				}
+			}
+		},
+		"AdvancedMemoryOptionsType": {
+			"type": "object",
+			"required": [
+				"STACK_SIZE"
+			],
+			"properties": {
+				"STACK_SIZE": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x2000",
+					"title": "Stack size (in byte)",
+					"description": "Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions."
+				}
+			}
+		},
+		"AdvancedCapacitiesOptionsType": {
+			"type": "object",
+			"required": [
+				"MAX_PCI_DEV_NUM",
+				"MAX_PT_IRQ_ENTRIES",
+				"MAX_MSIX_TABLE_NUM",
+				"MAX_EMULATED_MMIO"
+			],
+			"properties": {
+				"MAX_PCI_DEV_NUM": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 1024,
+					"default": 96,
+					"title": "Maximum number of PCI devices",
+					"description": "Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)"
+				},
+				"MAX_PT_IRQ_ENTRIES": {
+					"type": "integer",
+					"default": 256,
+					"title": "MAX_PT_IRQ_ENTRIES",
+					"description": "The pre-defined number of interrupt sources of all pass-through devices."
+				},
+				"MAX_MSIX_TABLE_NUM": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 2048,
+					"default": 64,
+					"title": "MAX_MSIX_TABLE_NUM",
+					"description": "Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)"
+				},
+				"MAX_EMULATED_MMIO": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 128,
+					"default": 16,
+					"title": "MAX_EMULATED_MMIO",
+					"description": "Specify maximum number of emulated MMIO regions. (Default value is 16)"
+				}
+			}
+		},
+		"HVAdvancedConfigType": {
+			"type": "object",
+			"required": [
+				"FEATURES",
+				"MEMORY",
+				"CAPACITIES"
+			],
+			"properties": {
+				"FEATURES": {
+					"$ref": "#/definitions/AdvancedFeatureOptionsType",
+					"title": "Hypervisor features",
+					"description": "Enable hypervisor features."
+				},
+				"MEMORY": {
+					"$ref": "#/definitions/AdvancedMemoryOptionsType",
+					"title": "Memory options",
+					"description": "Configure memory used by the hypervisor."
+				},
+				"CAPACITIES": {
+					"$ref": "#/definitions/AdvancedCapacitiesOptionsType",
+					"title": "Hypervisor capacities",
+					"description": "Configure the capacities of the hypervisor."
+				}
+			}
+		}
+	}
+}
