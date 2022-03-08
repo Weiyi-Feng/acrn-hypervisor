@@ -13,9 +13,11 @@ export default class ConfigTabBar extends Component {
     }
 
     componentDidMount = () => {
-        this.funRegisterID = acrnConfigurator.programLayer.register('scenarioDataUpdate', () => {
-            this.forceUpdate()
-        })
+        this.funRegisterID = acrnConfigurator.programLayer.register(
+            acrnConfigurator.eventName.scenarioDataUpdate, () => {
+                this.forceUpdate()
+            }
+        )
     }
 
     componentWillUnmount = () => {
