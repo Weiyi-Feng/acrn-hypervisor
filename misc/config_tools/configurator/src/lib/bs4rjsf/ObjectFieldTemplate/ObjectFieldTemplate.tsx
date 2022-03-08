@@ -27,11 +27,8 @@ const ObjectFieldTemplate = (
         disabled,
         readonly,
     }: ObjectFieldTemplateProps) => {
-    let noRowFlag = false
+    console.log(properties.map((e) => e.content))
     let content = properties.map((element: any, index: number) => {
-        if (uiSchema && uiSchema[element.name] && uiSchema[element.name].hasOwnProperty('ui:grid')) {
-            noRowFlag = true
-        }
         return (
             <Col
                 key={index}
@@ -45,14 +42,6 @@ const ObjectFieldTemplate = (
             </Col>
         );
     })
-
-    let inContent
-    if (!noRowFlag) {
-        inContent = <Row>{content}</Row>
-    } else {
-        inContent = content
-    }
-
     let expand = canExpand(schema, uiSchema, formData) ? (
         <Row>
             <Col xs={{offset: 9, span: 3}} className="py-4">
