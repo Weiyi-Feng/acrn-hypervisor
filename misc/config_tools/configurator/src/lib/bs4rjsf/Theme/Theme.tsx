@@ -9,29 +9,29 @@ import FieldTemplate from "../FieldTemplate";
 import ObjectFieldTemplate from "../ObjectFieldTemplate";
 import Widgets from "../Widgets";
 
-import { ThemeProps } from "@rjsf/core";
-import { utils } from "@rjsf/core";
+import {ThemeProps} from "@rjsf/core";
+import {utils} from "@rjsf/core";
 
-const { getDefaultRegistry } = utils;
+const {getDefaultRegistry} = utils;
 
-const { fields, widgets } = getDefaultRegistry();
+const {fields, widgets} = getDefaultRegistry();
 
 const DefaultChildren = () => (
-  <div>
-    <Button variant="primary" type="submit">
-      Submit
-    </Button>
-  </div>
+    <div>
+        <Button variant="primary" type="submit">
+            Submit
+        </Button>
+    </div>
 );
 
 const Theme: ThemeProps = {
-  children: <DefaultChildren />,
-  ArrayFieldTemplate,
-  fields: { ...fields, ...Fields },
-  FieldTemplate,
-  ObjectFieldTemplate,
-  widgets: { ...widgets, ...Widgets },
-  ErrorList,
+    children: <DefaultChildren/>,
+    ArrayFieldTemplate,
+    fields: {...fields, ...Fields},
+    FieldTemplate,
+    ObjectFieldTemplate,
+    widgets: {...widgets, ...Widgets},
+    ErrorList,
 };
 
 export default Theme;

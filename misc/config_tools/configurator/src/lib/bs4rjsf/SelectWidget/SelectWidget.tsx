@@ -91,7 +91,7 @@ const SelectWidget = (
                     disabled={disabled}
                     readOnly={readonly}
                     autoFocus={autofocus}
-                    className={"form-select "+(rawErrors.length > 0 ? "is-invalid" : "")}
+                    className={"form-select " + (rawErrors.length > 0 ? "is-invalid" : "")}
                     onBlur={
                         onBlur &&
                         ((event: React.FocusEvent) => {
