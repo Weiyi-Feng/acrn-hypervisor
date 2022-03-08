@@ -55,6 +55,11 @@ export class ConfigForm extends Component {
         let params = this.getParams(VMID, mode)
         let uiSchema = {
             basic: {
+                DEBUG_OPTIONS: {
+                    BUILD_TYPE: {
+                        "ui:widget": "radio"
+                    }
+                },
                 FEATURES: {
                     IVSHMEM: {
                         IVSHMEM_REGION: {
