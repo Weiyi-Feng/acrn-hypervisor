@@ -1,2 +1,2 @@
-export { default } from "./DateTimeWidget";
+export {default} from "./DateTimeWidget";
 export * from "./DateTimeWidget";
