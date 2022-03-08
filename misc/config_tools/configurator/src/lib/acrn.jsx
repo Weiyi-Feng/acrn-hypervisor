@@ -23,6 +23,9 @@ class EventBase {
     constructor() {
         this.funRegister = {}
         this.funRegisterID = 0
+        this.eventName = {
+            scenarioDataUpdate: 'scenarioDataUpdate'
+        }
     }
 
     register = (eventName, fun) => {
