@@ -1,0 +1,2 @@
+/acrn-config/vm[1]/vm_type, /acrn-config/vm[2]/vm_type: Multiple pre-launched VMs [SAFETY_VM1, SAFETY_VM2] are defined as RT VMs, but ACRN supports at most one pre-launched RT VM in one scenario. Adjust the VM types of those VMs to STANDARD_VM to fix this.
+/acrn-config/vm[1]/vm_type, /acrn-config/vm[2]/vm_type, /acrn-config/vm[4]/vm_type, /acrn-config/vm[5]/vm_type: Pre-launched RT VM(s) [SAFETY_VM1, SAFETY_VM2] and post-launched RT VMs [POST_STD_VM1, POST_STD_VM2] cannot coexist. Adjust the VM types of those VMs to STANDARD_VM to fix this.

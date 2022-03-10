@@ -1,0 +1,4 @@
+/acrn-config/vm[1]/cpu_affinity: VM "SAFETY_VM1" repeats a physical CPU affinity assignment: [10, 11, 12, 13, 13, 14]. Remove the duplicates.
+/acrn-config/vm[1]/cpu_affinity/pcpu_id[6]: The physical CPU 14 allocated to VM "SAFETY_VM1" does not exist on the target board. Remove this CPU from the CPU affinity setting.
+/acrn-config/vm[3]/cpu_affinity: The physical CPUs allocated to the VM "POST_STD_VM1" have both performance cores 5 and efficient cores [6, 7, 8, 9, 10], which is unsupported. Remove either all performance or all efficient cores from the CPU affinity.
+/acrn-config/vm[1]/cpu_affinity, /acrn-config/vm[3]/cpu_affinity: Physical CPU 10 is assigned to pre-launched VM "SAFETY_VM1" and thus cannot be shared among multiple VMs. Look for, and probably remove any affinity assignments to 10 in these VM's settings: [SAFETY_VM1, POST_STD_VM1].

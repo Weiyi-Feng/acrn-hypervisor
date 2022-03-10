@@ -1,0 +1,2 @@
+/acrn-config/vm[1]/mmio_resources: VM "SAFETY_VM1" is assigned both a TPM2 and P2SB (Primary-to-Sideband bridge), which is not a supported configuration. Remove one of these choices.
+/acrn-config/vm[3]/mmio_resources: Unexpected child with tag 'p2sb' at position 1.

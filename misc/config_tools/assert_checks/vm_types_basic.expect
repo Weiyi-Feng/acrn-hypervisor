@@ -1,0 +1,3 @@
+/acrn-config/vm[1]: This pre-launched VM "SAFETY_VM1" (ID: 3) must have a VM ID value less than the service VM (ID: 1). Adjust the VM ID values to fix this.
+/acrn-config/vm[2], /acrn-config/vm[3]: There can be at most one service VM, but more than one was configured. Verify there is only one VM with vm_type set to SERVICE_VM.
+/acrn-config/vm[4]: This post-launched VM "POST_STD_VM1" (ID: 0) must have a VM ID value greater than the service VM (ID: 1). Adjust the VM ID values to fix this.
