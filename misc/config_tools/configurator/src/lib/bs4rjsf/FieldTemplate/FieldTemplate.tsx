@@ -7,7 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import WrapIfAdditional from "./WrapIfAdditional";
 // @ts-ignore
-import rst2html from "rst2html"
+// import rst2html from "rst2html"
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
@@ -43,7 +43,7 @@ const FieldTemplate = (
                     <Popover id={`popover-positioned-top`}>
                         <Popover.Body>
                             <Form.Text className={rawErrors.length > 0 ? "text-danger" : "text-muted"}
-                                       dangerouslySetInnerHTML={{__html: rst2html(rawDescription)}}/>
+                                       dangerouslySetInnerHTML={{__html: rawDescription}}/>
                         </Popover.Body>
                     </Popover>
                 }>

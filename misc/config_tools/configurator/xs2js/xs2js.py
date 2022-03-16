@@ -5,6 +5,7 @@ from collections import OrderedDict
 from pathlib import Path
 
 import xmltodict
+from library.document import ACRNDocumentStringConvertor
 
 
 class XSTypes:
@@ -79,6 +80,7 @@ class XS2JS:
 
     def __init__(self, schema_filename):
         self.xs = XS(schema_filename)
+        self.desc_conv = ACRNDocumentStringConvertor()
 
     def _get_definitions(self):
         """convert xml schema types to json schema definitions"""
@@ -222,7 +224,12 @@ class XS2JS:
             # get description
             if 'xs:annotation' in element:
                 js_ele['title'] = element['xs:annotation'].get('@acrn:title', name)
-                js_ele['description'] = (lambda x: x if x else '')(element['xs:annotation']['xs:documentation'])
+                documentation: str = element['xs:annotation'].get('xs:documentation', None)
+                if documentation is None or documentation.strip() == '':
+                    documentation = ''
+                if documentation:
+                    documentation = self.desc_conv.convert(documentation)
+                js_ele['description'] = documentation
 
             properties[name] = js_ele
 

@@ -150,6 +150,13 @@
 			"type": "string",
 			"pattern": "^[0-9A-Fa-f]{1,2}:[0-1][0-9A-Fa-f].[0-7]$"
 		},
+		"ProviderType": {
+			"type": "string",
+			"enum": [
+				"Hypervisor",
+				"Device model"
+			]
+		},
 		"IVSHMEMSize": {
 			"type": "integer",
 			"enum": [
@@ -162,13 +169,6 @@
 				128,
 				256,
 				512
-			]
-		},
-		"IVSHMEMType": {
-			"type": "string",
-			"enum": [
-				"Hypervisor",
-				"Device Model"
 			]
 		},
 		"LoadOrderType": {
@@ -196,58 +196,7 @@
 				"KERNEL_ELF"
 			]
 		},
-		"VuartType": {
-			"type": "string",
-			"enum": [
-				"legacy",
-				"pci"
-			]
-		},
-		"LegacyVuartType": {
-			"type": "string",
-			"enum": [
-				"VUART_LEGACY_PIO",
-				"VUART_PCI"
-			]
-		},
-		"LegacyVuartBase": {
-			"type": "string",
-			"enum": [
-				"SERVICE_VM_COM1_BASE",
-				"SERVICE_VM_COM2_BASE",
-				"SERVICE_VM_COM3_BASE",
-				"SERVICE_VM_COM4_BASE",
-				"COM1_BASE",
-				"COM2_BASE",
-				"COM3_BASE",
-				"COM4_BASE",
-				"CONFIG_COM_BASE",
-				"INVALID_COM_BASE"
-			]
-		},
-		"LegacyVuartIrq": {
-			"type": "string",
-			"enum": [
-				"SERVICE_VM_COM1_IRQ",
-				"SERVICE_VM_COM2_IRQ",
-				"SERVICE_VM_COM3_IRQ",
-				"SERVICE_VM_COM4_IRQ",
-				"COM1_IRQ",
-				"COM2_IRQ",
-				"COM3_IRQ",
-				"COM4_IRQ",
-				"CONFIG_COM_IRQ",
-				"0"
-			]
-		},
-		"PCIVuartBase": {
-			"type": "string",
-			"enum": [
-				"PCI_VUART",
-				"INVALID_PCI_BASE"
-			]
-		},
-		"ConsoleVuartConfigurationType": {
+		"ConsoleVuartConfiguration": {
 			"type": "string",
 			"enum": [
 				"None",
@@ -258,11 +207,25 @@
 				"PCI"
 			]
 		},
+		"VuartType": {
+			"type": "string",
+			"enum": [
+				"legacy",
+				"pci"
+			]
+		},
 		"OSType": {
 			"type": "string",
 			"enum": [
 				"Non-Windows OS",
 				"Windows OS"
+			]
+		},
+		"BasicVMType": {
+			"type": "string",
+			"enum": [
+				"RTVM",
+				"STANDARD_VM"
 			]
 		},
 		"IVSHMEMVM": {
@@ -275,12 +238,12 @@
 				"VM_NAME": {
 					"$ref": "#/definitions/VMNameType",
 					"title": "VM_NAME",
-					"description": "Name of the VM which use this IVSHMEM."
+					"description": "<div class=\"document\">\n <p>\n  Name of the VM which use this IVSHMEM.\n </p>\n</div>\n"
 				},
 				"VBDF": {
 					"$ref": "#/definitions/VBDFType",
 					"title": "VBDF",
-					"description": "Bus, Device and function of the virtual\ndevice in VM . Set in hex."
+					"description": "<div class=\"document\">\n <p>\n  Bus, Device and function of the virtual\ndevice in VM . Set in hex.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -296,7 +259,7 @@
 					},
 					"type": "array",
 					"title": "IVSHMEM_VM",
-					"description": "Set each VM which use this IVSHMEM."
+					"description": "<div class=\"document\">\n <p>\n  Set each VM which use this IVSHMEM.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -304,32 +267,33 @@
 			"type": "object",
 			"required": [
 				"NAME",
-				"KIND",
+				"PROVIDED_BY",
 				"IVSHMEM_SIZE",
 				"IVSHMEM_VMS"
 			],
 			"properties": {
 				"NAME": {
 					"type": "string",
+					"pattern": "^\\w+$",
 					"title": "Name",
-					"description": "Name of the shared memory region."
+					"description": "<div class=\"document\">\n <p>\n  Name of the shared memory region.\n </p>\n</div>\n"
 				},
-				"KIND": {
-					"$ref": "#/definitions/IVSHMEMType",
+				"PROVIDED_BY": {
+					"$ref": "#/definitions/ProviderType",
 					"default": "Hypervisor",
 					"title": "Emulated by",
-					"description": "Name of the shared memory region."
+					"description": "<div class=\"document\">\n <p>\n  Whether the shared memory region is provided by the hypervisor or device model.\n </p>\n</div>\n"
 				},
 				"IVSHMEM_SIZE": {
 					"$ref": "#/definitions/IVSHMEMSize",
 					"default": 2,
 					"title": "Size",
-					"description": "Memory size of inter-VM shared memory (IVSHMEM)\nin megabytes. The value should be a power of 2\nand no more than 512."
+					"description": "<div class=\"document\">\n <p>\n  Memory size of inter-VM shared memory (IVSHMEM)\nin megabytes. The value should be a power of 2\nand no more than 512.\n </p>\n</div>\n"
 				},
 				"IVSHMEM_VMS": {
 					"$ref": "#/definitions/IVSHMEMVMS",
 					"title": "Shared VMs",
-					"description": "Set all VMs which use this IVSHMEM."
+					"description": "<div class=\"document\">\n <p>\n  Set all VMs which use this IVSHMEM.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -342,7 +306,7 @@
 					},
 					"type": "array",
 					"title": "IVSHMEM_REGION",
-					"description": "Set a inter-VM shared memory."
+					"description": "<div class=\"document\">\n <p>\n  Set a inter-VM shared memory.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -358,19 +322,19 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Intel Resource Director Technology",
-					"description": "Enable the Intel Resource Director Technology (RDT)\nallocation feature. If the board hardware does not support\nRDT, setting this option to ``y`` is ignored."
+					"description": "<div class=\"document\">\n <p>\n  Enable the Intel Resource Director Technology (RDT)\nallocation feature. If the board hardware does not support\nRDT, setting this option to\n  <span class=\"docutils literal\">\n   y\n  </span>\n  is ignored.\n </p>\n</div>\n"
 				},
 				"CDP_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Code and Data Prioritization",
-					"description": "Specify whether to enable Code and Data Prioritization (CDP).\nCDP is an extension of CAT. Set to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CDP."
+					"description": "<div class=\"document\">\n <p>\n  Specify whether to enable Code and Data Prioritization (CDP).\nCDP is an extension of CAT. Set to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CDP.\n </p>\n</div>\n"
 				},
 				"VCAT_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "VCAT_ENABLED",
-					"description": "Specify whether to enable CAT virtualization (vCAT).\nSet to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CAT."
+					"description": "<div class=\"document\">\n <p>\n  Specify whether to enable CAT virtualization (vCAT).\nSet to 'y' to enable the feature or 'n' to disable it.\nThe 'y' will be ignored when hardware does not support CAT.\n </p>\n</div>\n"
 				},
 				"CLOS_MASK": {
 					"type": "array",
@@ -378,7 +342,7 @@
 						"type": "string"
 					},
 					"title": "CLOS_MASK",
-					"description": "Specify the cache capacity bitmask for the CLOS; only continuous '1' bits\nare allowed. The value will be ignored when hardware does not support RDT.\nThis option takes effect only if :option:`hv.FEATURES.RDT.RDT_ENABLED` is set to ``y``.\nAs :option:`vm.clos.vcpu_clos` specifies the index of the CLOS to be associated with the given vCPU,\n:option:`hv.FEATURES.RDT.CLOS_MASK` of that CLOS would impact the performance of the given vCPU."
+					"description": "<div class=\"document\">\n <p>\n  Specify the cache capacity bitmask for the CLOS; only continuous '1' bits\nare allowed. The value will be ignored when hardware does not support RDT.\nThis option takes effect only if\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/reference/config-options.html#cmdoption-arg-hv.FEATURES.RDT.RDT_ENABLED\" target=\"_blank\">\n   hv.FEATURES.RDT.RDT_ENABLED\n  </a>\n  is set to\n  <span class=\"docutils literal\">\n   y\n  </span>\n  .\nAs\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/reference/config-options.html#cmdoption-arg-vm.clos.vcpu_clos\" target=\"_blank\">\n   vm.clos.vcpu_clos\n  </a>\n  specifies the index of the CLOS to be associated with the given vCPU,\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/reference/config-options.html#cmdoption-arg-hv.FEATURES.RDT.CLOS_MASK\" target=\"_blank\">\n   hv.FEATURES.RDT.CLOS_MASK\n  </a>\n  of that CLOS would impact the performance of the given vCPU.\n </p>\n</div>\n"
 				},
 				"MBA_DELAY": {
 					"type": "array",
@@ -386,7 +350,7 @@
 						"type": "string"
 					},
 					"title": "MBA_DELAY",
-					"description": "Memory Bandwidth Allocation delay value."
+					"description": "<div class=\"document\">\n <p>\n  Memory Bandwidth Allocation delay value.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -400,7 +364,7 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Software SRAM (for real-time apps)",
-					"description": "Enable the Software SRAM feature for real-time VMs. This feature reserves memory buffers as always-cached memory for improved VM performance."
+					"description": "<div class=\"document\">\n <p>\n  Enable the Software SRAM feature for real-time VMs. This feature reserves memory buffers as always-cached memory for improved VM performance.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -417,7 +381,7 @@
 						"default": 2
 					},
 					"title": "pcpu_id",
-					"description": "A pCPU that this VM's vCPU is allowed to pin\nto."
+					"description": "<div class=\"document\">\n <p>\n  A pCPU that this VM's vCPU is allowed to pin\nto.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -434,7 +398,7 @@
 						"default": 0
 					},
 					"title": "vcpu_clos",
-					"description": "By default (``virtual_cat_support`` is not specified):\nvcpu_clos is per-CPU and it configures each CPU in VMs to a desired CLOS ID in the ``VM`` section of the\nscenario file. Follow :ref:`rdt_detection_capabilities` to identify the maximum supported CLOS ID that can be used.\n\nIf ``virtual_cat_support`` is specified:\nvcpu_clos is not per-CPU anymore, just a list of physical CLOSIDs (minimum 2) that are assigned to VMs\nfor vCAT use. Each vcpu_clos will be mapped to a virtual CLOSID, the first vcpu_clos is mapped to virtual\nCLOSID 0 and the second is mapped to virtual CLOSID 1, etc."
+					"description": "<div class=\"document\">\n <p>\n  By default (\n  <span class=\"docutils literal\">\n   virtual_cat_support\n  </span>\n  is not specified):\nvcpu_clos is per-CPU and it configures each CPU in VMs to a desired CLOS ID in the\n  <span class=\"docutils literal\">\n   VM\n  </span>\n  section of the\nscenario file. Follow\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/tutorials/rdt_configuration.html#rdt-detection-capabilities\" target=\"_blank\">\n   RDT Detection and Resource Capabilities\n  </a>\n  to identify the maximum supported CLOS ID that can be used.\n </p>\n <p>\n  If\n  <span class=\"docutils literal\">\n   virtual_cat_support\n  </span>\n  is specified:\nvcpu_clos is not per-CPU anymore, just a list of physical CLOSIDs (minimum 2) that are assigned to VMs\nfor vCAT use. Each vcpu_clos will be mapped to a virtual CLOSID, the first vcpu_clos is mapped to virtual\nCLOSID 0 and the second is mapped to virtual CLOSID 1, etc.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -449,13 +413,13 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": 0,
 					"title": "base",
-					"description": "Specify SGX EPC section base, must be page aligned. (Default value is 0)"
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX EPC section base, must be page aligned. (Default value is 0)\n </p>\n</div>\n"
 				},
 				"size": {
 					"$ref": "#/definitions/HexFormat",
 					"default": 0,
 					"title": "size",
-					"description": "Specify SGX EPC section size in Bytes, must be page aligned. (Default value is 0)"
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX EPC section size in Bytes, must be page aligned. (Default value is 0)\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -470,31 +434,31 @@
 					"type": "integer",
 					"default": 256,
 					"title": "VM physical memory allocation (MB)",
-					"description": "Specify the physical memory allocated to this VM in Megabytes."
+					"description": "<div class=\"document\">\n <p>\n  Specify the physical memory allocated to this VM in Megabytes.\n </p>\n</div>\n"
 				},
 				"start_hpa": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x100000000",
 					"title": "start_hpa",
-					"description": "The starting physical address in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  The starting physical address in host for the VM.\n </p>\n</div>\n"
 				},
 				"size": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x20000000",
 					"title": "size",
-					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+					"description": "<div class=\"document\">\n <p>\n  The memory size in bytes for the VM. Default value is\n  <span class=\"docutils literal\">\n   0x200000000\n  </span>\n  .\n </p>\n</div>\n"
 				},
 				"start_hpa2": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x0",
 					"title": "start_hpa2",
-					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Start of second HPA for non-contiguous allocations in host for the VM.\n </p>\n</div>\n"
 				},
 				"size_hpa2": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x0",
 					"title": "size_hpa2",
-					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Memory size of second HPA for non-contiguous allocations in Bytes for the VM.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -508,22 +472,32 @@
 				"kern_type": {
 					"$ref": "#/definitions/VMKernelType",
 					"title": "Kernel image type",
-					"description": "Specify the kernel image type so the hypervisor can load it correctly."
+					"description": "<div class=\"document\">\n <p>\n  Specify the kernel image type so the hypervisor can load it correctly.\n </p>\n</div>\n"
 				},
 				"kern_mod": {
 					"type": "string",
 					"title": "Kernel module tag",
-					"description": "Enter the tag for the kernel image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline."
+					"description": "<div class=\"document\">\n <p>\n  Enter the tag for the kernel image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline.\n </p>\n</div>\n"
 				},
 				"ramdisk_mod": {
 					"type": "string",
 					"title": "RAMdisk module tag",
-					"description": "Specify the tag for the ramdisk image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline."
+					"description": "<div class=\"document\">\n <p>\n  Specify the tag for the ramdisk image that is used as a multiboot module. It must exactly match the module tag in the GRUB multiboot cmdline.\n </p>\n</div>\n"
 				},
 				"bootargs": {
 					"type": "string",
 					"title": "Kernel boot arguments",
-					"description": "Specify configurable boot argument for pre-launched or Service VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify configurable boot argument for pre-launched or Service VM.\n </p>\n</div>\n"
+				},
+				"kern_load_addr": {
+					"$ref": "#/definitions/KernLoadAddr",
+					"title": "kern_load_addr",
+					"description": "<div class=\"document\">\n <p>\n  The loading address in host memory for the VM kernel.\n </p>\n</div>\n"
+				},
+				"kern_entry_addr": {
+					"$ref": "#/definitions/KernEntryAddr",
+					"title": "kern_entry_addr",
+					"description": "<div class=\"document\">\n <p>\n  The entry address in host memory for the VM kernel.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -586,84 +560,6 @@
 				}
 			}
 		},
-		"LegacyVuartConfiguration": {
-			"type": "object",
-			"required": [
-				"type",
-				"base",
-				"irq"
-			],
-			"properties": {
-				"type": {
-					"$ref": "#/definitions/LegacyVuartType",
-					"default": "VUART_LEGACY_PIO",
-					"title": "type",
-					"description": "vUART (COM) type; only legacy PIO mode is\nsupported."
-				},
-				"base": {
-					"$ref": "#/definitions/LegacyVuartBase",
-					"title": "base",
-					"description": "vUART (COM) enabling switch. Enable by exposing its COM_BASE\n(e.b., ``SERVICE_VM_COM1_BASE`` for Service VM); disable by returning\n``INVALID_COM_BASE``."
-				},
-				"irq": {
-					"$ref": "#/definitions/LegacyVuartIrq",
-					"title": "irq",
-					"description": "vCOM IRQ."
-				},
-				"target_vm_id": {
-					"type": "integer",
-					"default": 1,
-					"title": "target_vm_id",
-					"description": "COM2 is used for VM communications. When it is enabled, specify which\ntarget VM the current VM connects to."
-				},
-				"target_uart_id": {
-					"type": "integer",
-					"default": 1,
-					"title": "target_uart_id",
-					"description": "Target vUART ID to which the vCOM2 connects."
-				}
-			}
-		},
-		"ConsoleVuartConfiguration": {
-			"type": "object",
-			"required": [
-				"base"
-			],
-			"properties": {
-				"base": {
-					"$ref": "#/definitions/PCIVuartBase",
-					"default": "INVALID_PCI_BASE",
-					"title": "base",
-					"description": "Console vUART (A.K.A PCI based vUART) enabling switch.\nEnable by specifying PCI_VUART; disable by specifying\n``INVALID_PCI_BASE``."
-				}
-			}
-		},
-		"CommunicationVuartConfiguration": {
-			"type": "object",
-			"required": [
-				"base",
-				"target_vm_id",
-				"target_uart_id"
-			],
-			"properties": {
-				"base": {
-					"$ref": "#/definitions/PCIVuartBase",
-					"default": "INVALID_PCI_BASE",
-					"title": "base",
-					"description": "Communication vUART (A.K.A PCI based vUART) enabling switch.\nEnable by specifying PCI_VUART; disable by specifying\n``INVALID_PCI_BASE``."
-				},
-				"target_vm_id": {
-					"type": "integer",
-					"title": "target_vm_id",
-					"description": "specify which target VM the current VM connects to."
-				},
-				"target_uart_id": {
-					"type": "integer",
-					"title": "target_uart_id",
-					"description": "Target vUART ID to which the ``communication_vuart`` connects."
-				}
-			}
-		},
 		"MMIOResourcesConfiguration": {
 			"type": "object",
 			"properties": {
@@ -671,13 +567,13 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Trusted Platform Module passthrough",
-					"description": "Passthrough the Trusted Platform Module (TPM2) device to this VM. (Optional) (Default value is n)"
+					"description": "<div class=\"document\">\n <p>\n  Passthrough the Trusted Platform Module (TPM2) device to this VM. (Optional) (Default value is n)\n </p>\n</div>\n"
 				},
 				"p2sb": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Primary-to-Sideband bridge passthrough",
-					"description": "Passthrough the P2SB (Primary-to-Sideband) bridge register access BAR to the this VM. (Optional) (Default value is n)"
+					"description": "<div class=\"document\">\n <p>\n  Passthrough the P2SB (Primary-to-Sideband) bridge register access BAR to the this VM. (Optional) (Default value is n)\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -690,7 +586,7 @@
 						"type": "string"
 					},
 					"title": "PCI device assignment",
-					"description": "Select the PCI devices you want to assign to this virtual machine."
+					"description": "<div class=\"document\">\n <p>\n  Select the PCI devices you want to assign to this virtual machine.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -708,30 +604,30 @@
 					"$ref": "#/definitions/BuildType",
 					"default": "debug",
 					"title": "Build type",
-					"description": "Identify build type.  Debug mode enables debug shell, prints, and logs.  Release mode optimizes the ACRN binary for deployment and turns off all debug infrastructure.  These can only be changed at build time."
+					"description": "<div class=\"document\">\n <p>\n  Identify build type.  Debug mode enables debug shell, prints, and logs.  Release mode optimizes the ACRN binary for deployment and turns off all debug infrastructure.  These can only be changed at build time.\n </p>\n</div>\n"
 				},
 				"SERIAL_CONSOLE": {
 					"$ref": "#/definitions/SerialConsoleOptions",
 					"title": "Serial console port",
-					"description": "Specify the host serial device used for hypervisor debugging."
+					"description": "<div class=\"document\">\n <p>\n  Specify the host serial device used for hypervisor debugging.\n </p>\n</div>\n"
 				},
 				"MEM_LOGLEVEL": {
 					"$ref": "#/definitions/LogLevelType",
 					"default": "0: None",
 					"title": "ACRN log level",
-					"description": "Specify default log level for log messages stored in memory. Value can be changed at runtime.  Log messages with the selected value or lower are displayed."
+					"description": "<div class=\"document\">\n <p>\n  Specify default log level for log messages stored in memory. Value can be changed at runtime.  Log messages with the selected value or lower are displayed.\n </p>\n</div>\n"
 				},
 				"NPK_LOGLEVEL": {
 					"$ref": "#/definitions/LogLevelType",
 					"default": "0: None",
 					"title": "Intel Trace Hub log level",
-					"description": "Specify default log level for the hypervisor via Intel Trace Hub log.  Use the Intel Trace Hub's memory to record log messages.  Value can be changed at runtime.   Log messages with the selected value or lower are displayed."
+					"description": "<div class=\"document\">\n <p>\n  Specify default log level for the hypervisor via Intel Trace Hub log.  Use the Intel Trace Hub's memory to record log messages.  Value can be changed at runtime.   Log messages with the selected value or lower are displayed.\n </p>\n</div>\n"
 				},
 				"CONSOLE_LOGLEVEL": {
 					"$ref": "#/definitions/LogLevelType",
 					"default": "0: None",
 					"title": "Serial console log level",
-					"description": "Specify default log level for log messages written to the serial console.  Log messages with the selected value or lower are displayed."
+					"description": "<div class=\"document\">\n <p>\n  Specify default log level for log messages written to the serial console.  Log messages with the selected value or lower are displayed.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -758,78 +654,78 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Hypervisor relocation in memory",
-					"description": "Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware."
+					"description": "<div class=\"document\">\n <p>\n  Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware.\n </p>\n</div>\n"
 				},
 				"SCHEDULER": {
 					"$ref": "#/definitions/SchedulerType",
 					"default": "SCHED_BVT",
 					"title": "Scheduler and workload prioritization",
-					"description": "Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU."
+					"description": "<div class=\"document\">\n <p>\n  Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU.\n </p>\n</div>\n"
 				},
 				"MULTIBOOT2": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Enable Multiboot2",
-					"description": "Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code."
+					"description": "<div class=\"document\">\n <p>\n  Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code.\n </p>\n</div>\n"
 				},
 				"ENFORCE_TURNOFF_AC": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Split lock detection",
-					"description": "Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance."
+					"description": "<div class=\"document\">\n <p>\n  Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance.\n </p>\n</div>\n"
 				},
 				"ENFORCE_TURNOFF_GP": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Prevent system bus locking",
-					"description": "Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance."
+					"description": "<div class=\"document\">\n <p>\n  Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance.\n </p>\n</div>\n"
 				},
 				"SECURITY_VM_FIXUP": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "SECURITY_VM_FIXUP",
-					"description": "Enable to do fixup for TPM2 and SMBIOS for Security VM. If no Security VM, setting this option to ``n``"
+					"description": "<div class=\"document\">\n <p>\n  Enable to do fixup for TPM2 and SMBIOS for Security VM. If no Security VM, setting this option to\n  <span class=\"docutils literal\">\n   n\n  </span>\n </p>\n</div>\n"
 				},
 				"KEEP_IRQ_DISABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "KEEP_IRQ_DISABLED",
-					"description": "If ``y``, permanently disables all interrupts in HV root mode."
+					"description": "<div class=\"document\">\n <p>\n  If\n  <span class=\"docutils literal\">\n   y\n  </span>\n  , permanently disables all interrupts in HV root mode.\n </p>\n</div>\n"
 				},
 				"RDT": {
 					"$ref": "#/definitions/RDTType",
 					"title": "Intel Resource Director Technology",
-					"description": "Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs.\n </p>\n</div>\n"
 				},
 				"HYPERV_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "TLFS support for Windows",
-					"description": "Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support."
+					"description": "<div class=\"document\">\n <p>\n  Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support.\n </p>\n</div>\n"
 				},
 				"IOMMU_ENFORCE_SNP": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "IOMMU_ENFORCE_SNP",
-					"description": "Specify if the IOMMU enforces snoop behavior of DMA operations."
+					"description": "<div class=\"document\">\n <p>\n  Specify if the IOMMU enforces snoop behavior of DMA operations.\n </p>\n</div>\n"
 				},
 				"ACPI_PARSE_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Parse ACPI tables at runtime",
-					"description": "Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file."
+					"description": "<div class=\"document\">\n <p>\n  Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file.\n </p>\n</div>\n"
 				},
 				"L1D_VMENTRY_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Mitigate L1 terminal fault",
-					"description": "Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache."
+					"description": "<div class=\"document\">\n <p>\n  Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache.\n </p>\n</div>\n"
 				},
 				"MCE_ON_PSC_DISABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "MCE workaround",
-					"description": "Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families)."
+					"description": "<div class=\"document\">\n <p>\n  Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families).\n </p>\n</div>\n"
 				},
 				"IVSHMEM": {
 					"$ref": "#/definitions/IVSHMEMInfo",
@@ -854,13 +750,13 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x2000",
 					"title": "Stack size (in byte)",
-					"description": "Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions."
+					"description": "<div class=\"document\">\n <p>\n  Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions.\n </p>\n</div>\n"
 				},
 				"HV_RAM_START": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x00400000",
 					"title": "HV_RAM_START",
-					"description": "The 2MB-aligned starting physical address of the RAM region used by the hypervisor."
+					"description": "<div class=\"document\">\n <p>\n  The 2MB-aligned starting physical address of the RAM region used by the hypervisor.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -881,13 +777,13 @@
 					"type": "integer",
 					"default": 16,
 					"title": "MAX_VM_NUM",
-					"description": "Maximum number of User VMs allowed."
+					"description": "<div class=\"document\">\n <p>\n  Maximum number of User VMs allowed.\n </p>\n</div>\n"
 				},
 				"IOMMU_BUS_NUM": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x100",
 					"title": "IOMMU_BUS_NUM",
-					"description": "Highest PCI bus ID used during IOMMU initialization."
+					"description": "<div class=\"document\">\n <p>\n  Highest PCI bus ID used during IOMMU initialization.\n </p>\n</div>\n"
 				},
 				"MAX_IOAPIC_NUM": {
 					"type": "integer",
@@ -895,7 +791,7 @@
 					"maximum": 10,
 					"default": 1,
 					"title": "MAX_IOAPIC_NUM",
-					"description": "Maximum number of IOAPICs."
+					"description": "<div class=\"document\">\n <p>\n  Maximum number of IOAPICs.\n </p>\n</div>\n"
 				},
 				"MAX_PCI_DEV_NUM": {
 					"type": "integer",
@@ -903,7 +799,7 @@
 					"maximum": 1024,
 					"default": 96,
 					"title": "Maximum number of PCI devices",
-					"description": "Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)"
+					"description": "<div class=\"document\">\n <p>\n  Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)\n </p>\n</div>\n"
 				},
 				"MAX_IOAPIC_LINES": {
 					"type": "integer",
@@ -911,13 +807,13 @@
 					"maximum": 120,
 					"default": 120,
 					"title": "MAX_IOAPIC_LINES",
-					"description": "Maximum number of interrupt lines per IOAPIC."
+					"description": "<div class=\"document\">\n <p>\n  Maximum number of interrupt lines per IOAPIC.\n </p>\n</div>\n"
 				},
 				"MAX_PT_IRQ_ENTRIES": {
 					"type": "integer",
 					"default": 256,
 					"title": "MAX_PT_IRQ_ENTRIES",
-					"description": "The pre-defined number of interrupt sources of all pass-through devices."
+					"description": "<div class=\"document\">\n <p>\n  The pre-defined number of interrupt sources of all pass-through devices.\n </p>\n</div>\n"
 				},
 				"MAX_MSIX_TABLE_NUM": {
 					"type": "integer",
@@ -925,7 +821,7 @@
 					"maximum": 2048,
 					"default": 64,
 					"title": "MAX_MSIX_TABLE_NUM",
-					"description": "Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)"
+					"description": "<div class=\"document\">\n <p>\n  Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)\n </p>\n</div>\n"
 				},
 				"MAX_EMULATED_MMIO": {
 					"type": "integer",
@@ -933,7 +829,7 @@
 					"maximum": 128,
 					"default": 16,
 					"title": "MAX_EMULATED_MMIO",
-					"description": "Specify maximum number of emulated MMIO regions. (Default value is 16)"
+					"description": "<div class=\"document\">\n <p>\n  Specify maximum number of emulated MMIO regions. (Default value is 16)\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -947,7 +843,7 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x00000010",
 					"title": "GPU_SBDF",
-					"description": "Segment, Bus, Device, and function of the GPU."
+					"description": "<div class=\"document\">\n <p>\n  Segment, Bus, Device, and function of the GPU.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -965,30 +861,32 @@
 				"DEBUG_OPTIONS": {
 					"$ref": "#/definitions/DebugOptionsType",
 					"title": "Debug options",
-					"description": "Configure the debug facilities."
+					"description": "<div class=\"document\">\n <p>\n  Configure the debug facilities.\n </p>\n</div>\n"
 				},
 				"FEATURES": {
 					"$ref": "#/definitions/FeatureOptionsType",
 					"title": "Hypervisor features",
-					"description": "Enable hypervisor features."
+					"description": "<div class=\"document\">\n <p>\n  Enable hypervisor features.\n </p>\n</div>\n"
 				},
 				"MEMORY": {
 					"$ref": "#/definitions/MemoryOptionsType",
 					"title": "Memory options",
-					"description": "Configure memory used by the hypervisor."
+					"description": "<div class=\"document\">\n <p>\n  Configure memory used by the hypervisor.\n </p>\n</div>\n"
 				},
 				"CAPACITIES": {
 					"$ref": "#/definitions/CapacitiesOptionsType",
 					"title": "Hypervisor capacities",
-					"description": "Configure the capacities of the hypervisor."
+					"description": "<div class=\"document\">\n <p>\n  Configure the capacities of the hypervisor.\n </p>\n</div>\n"
 				},
 				"MISC_CFG": {
-					"$ref": "#/definitions/MiscCfgOptionsType"
+					"$ref": "#/definitions/MiscCfgOptionsType",
+					"title": "MISC_CFG",
+					"description": "<div class=\"document\">\n <p>\n  Miscellaneous options for workarounds.\n </p>\n</div>\n"
 				},
 				"vuart_connections": {
 					"$ref": "#/definitions/VuartConnectionsType",
 					"title": "Virtual UART connection",
-					"description": "Specify the vUART (aka COM) with the vUART ID by its ``id`` attribute.\nRefer to :ref:`vuart_config` for detailed vUART settings."
+					"description": "<div class=\"document\">\n <p>\n  Specify the vUART connection setting.\nRefer to\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/tutorials/vuart_configuration.html#vuart-config\" target=\"_blank\">\n   Enable vUART Configurations\n  </a>\n  for detailed vUART settings.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1012,12 +910,12 @@
 				"load_order": {
 					"$ref": "#/definitions/LoadOrderType",
 					"title": "Load order",
-					"description": "Specify the load_order."
+					"description": "<div class=\"document\">\n <p>\n  Specify the load_order.\n </p>\n</div>\n"
 				},
 				"vm_type": {
 					"$ref": "#/definitions/VMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1025,101 +923,102 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"secure_world_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "secure_world_support",
-					"description": "Specify secure world support for trustry OS."
+					"description": "<div class=\"document\">\n <p>\n  Specify secure world support for trustry OS.\n </p>\n</div>\n"
 				},
 				"hide_mtrr_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "hide_mtrr_support",
-					"description": "Specify MTRR capability to hide for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify MTRR capability to hide for VM.\n </p>\n</div>\n"
 				},
 				"security_vm": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "security_vm",
-					"description": "Specify TPM2 FIXUP for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify TPM2 FIXUP for VM.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"epc_section": {
 					"$ref": "#/definitions/EPCSection",
 					"title": "epc_section",
-					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned.\n </p>\n</div>\n"
 				},
 				"memory": {
 					"$ref": "#/definitions/MemoryInfo",
 					"title": "memory",
-					"description": "Specify memory information for Service and User VMs."
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"priority": {
 					"$ref": "#/definitions/PriorityType",
 					"default": "PRIO_LOW",
 					"title": "priority",
-					"description": "Specify the VM vCPU priority for scheduling."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM vCPU priority for scheduling.\n </p>\n</div>\n"
 				},
 				"companion_vmid": {
 					"type": "integer",
 					"default": 65535,
 					"title": "companion_vmid",
-					"description": "Specify the companion VM id of this VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify the companion VM id of this VM.\n </p>\n</div>\n"
 				},
 				"os_config": {
 					"$ref": "#/definitions/OSConfigurations",
 					"title": "os_config",
-					"description": "General information for host kernel, boot\nargument and memory."
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
 				},
 				"console_vuart": {
-					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
 					"title": "console_vuart",
-					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
 					"$ref": "#/definitions/MMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pt_intx": {
 					"type": "string",
 					"title": "pt_intx",
-					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+					"description": "<div class=\"document\">\n <p>\n  Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1130,31 +1029,31 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				},
 				"os_type": {
 					"$ref": "#/definitions/OSType",
 					"default": "Non-Windows OS",
 					"title": "OS type",
-					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+					"description": "<div class=\"document\">\n <p>\n  Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way.\n </p>\n</div>\n"
 				},
 				"vbootloader": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "OVMF (Open Virtual Machine Firmware)",
-					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+					"description": "<div class=\"document\">\n <p>\n  Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set.\n </p>\n</div>\n"
 				},
 				"vuart0": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "Emulate COM1 as standard I/O",
-					"description": "Enable ACRN Device Model to emulate COM1 as a User VM standard IO."
+					"description": "<div class=\"document\">\n <p>\n  Enable ACRN Device Model to emulate COM1 as a User VM standard IO.\n </p>\n</div>\n"
 				},
 				"usb_xhci": {
 					"type": "string",
 					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
 					"title": "usb_xhci",
-					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+					"description": "<div class=\"document\">\n <p>\n  Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting.\n </p>\n</div>\n"
 				},
 				"virtio_devices": {
 					"type": "object",
@@ -1162,26 +1061,26 @@
 						"console": {
 							"type": "string",
 							"title": "console",
-							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio console device setting.Input format:\n  </dt>\n  <dd>\n   <p>\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      [@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]\n     </span>\n    </span>\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"network": {
 							"type": "string",
 							"title": "network",
-							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio network device setting.\n  </dt>\n  <dd>\n   <p>\n    Input format:\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]\n     </span>\n    </span>\n    .\nThe\n    <span class=\"docutils literal\">\n     device_name\n    </span>\n    is the name of the TAP (or MacVTap) device.\nIt must include the keyword\n    <span class=\"docutils literal\">\n     tap\n    </span>\n    .\n    <span class=\"docutils literal\">\n     vhost\n    </span>\n    specifies the\nvhost backend; otherwise, the VBSU backend is used. The\n    <span class=\"docutils literal\">\n     mac\n    </span>\n    address is optional.\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"input": {
 							"type": "string",
 							"title": "input",
-							"description": "The virtio input device setting."
+							"description": "<div class=\"document\">\n <p>\n  The virtio input device setting.\n </p>\n</div>\n"
 						},
 						"block": {
 							"type": "string",
 							"title": "block",
-							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio block device setting.\n  </dt>\n  <dd>\n   <p>\n    Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						}
 					},
 					"title": "Virt-IO devices",
-					"description": "Enable virt-IO devices in post-launched VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable virt-IO devices in post-launched VMs.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1194,7 +1093,7 @@
 				"hv": {
 					"$ref": "#/definitions/HVConfigType",
 					"title": "hv",
-					"description": "The hypervisor configuration defines a working scenario and target\nboard by configuring the hypervisor image features and capabilities such as\nsetting up the log and the serial port."
+					"description": "<div class=\"document\">\n <p>\n  The hypervisor configuration defines a working scenario and target\nboard by configuring the hypervisor image features and capabilities such as\nsetting up the log and the serial port.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1208,25 +1107,25 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x100000000",
 					"title": "start_hpa",
-					"description": "The starting physical address in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  The starting physical address in host for the VM.\n </p>\n</div>\n"
 				},
 				"size": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x20000000",
 					"title": "size",
-					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+					"description": "<div class=\"document\">\n <p>\n  The memory size in bytes for the VM. Default value is\n  <span class=\"docutils literal\">\n   0x200000000\n  </span>\n  .\n </p>\n</div>\n"
 				},
 				"start_hpa2": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x0",
 					"title": "start_hpa2",
-					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Start of second HPA for non-contiguous allocations in host for the VM.\n </p>\n</div>\n"
 				},
 				"size_hpa2": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x0",
 					"title": "size_hpa2",
-					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Memory size of second HPA for non-contiguous allocations in Bytes for the VM.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1246,12 +1145,12 @@
 				"load_order": {
 					"$ref": "#/definitions/LoadOrderType",
 					"title": "Load order",
-					"description": "Specify the load_order."
+					"description": "<div class=\"document\">\n <p>\n  Specify the load_order.\n </p>\n</div>\n"
 				},
 				"vm_type": {
 					"$ref": "#/definitions/VMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1259,101 +1158,102 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"secure_world_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "secure_world_support",
-					"description": "Specify secure world support for trustry OS."
+					"description": "<div class=\"document\">\n <p>\n  Specify secure world support for trustry OS.\n </p>\n</div>\n"
 				},
 				"hide_mtrr_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "hide_mtrr_support",
-					"description": "Specify MTRR capability to hide for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify MTRR capability to hide for VM.\n </p>\n</div>\n"
 				},
 				"security_vm": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "security_vm",
-					"description": "Specify TPM2 FIXUP for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify TPM2 FIXUP for VM.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"epc_section": {
 					"$ref": "#/definitions/EPCSection",
 					"title": "epc_section",
-					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned.\n </p>\n</div>\n"
 				},
 				"memory": {
 					"$ref": "#/definitions/PreLaunchedMemoryInfo",
 					"title": "memory",
-					"description": "Specify memory information for Service and User VMs."
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"priority": {
 					"$ref": "#/definitions/PriorityType",
 					"default": "PRIO_LOW",
 					"title": "priority",
-					"description": "Specify the VM vCPU priority for scheduling."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM vCPU priority for scheduling.\n </p>\n</div>\n"
 				},
 				"companion_vmid": {
 					"type": "integer",
 					"default": 65535,
 					"title": "companion_vmid",
-					"description": "Specify the companion VM id of this VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify the companion VM id of this VM.\n </p>\n</div>\n"
 				},
 				"os_config": {
 					"$ref": "#/definitions/OSConfigurations",
 					"title": "os_config",
-					"description": "General information for host kernel, boot\nargument and memory."
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
 				},
 				"console_vuart": {
-					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
 					"title": "console_vuart",
-					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
 					"$ref": "#/definitions/MMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pt_intx": {
 					"type": "string",
 					"title": "pt_intx",
-					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+					"description": "<div class=\"document\">\n <p>\n  Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1364,7 +1264,7 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1378,25 +1278,25 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x100000000",
 					"title": "start_hpa",
-					"description": "The starting physical address in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  The starting physical address in host for the VM.\n </p>\n</div>\n"
 				},
 				"size": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x20000000",
 					"title": "size",
-					"description": "The memory size in bytes for the VM. Default value is ``0x200000000``."
+					"description": "<div class=\"document\">\n <p>\n  The memory size in bytes for the VM. Default value is\n  <span class=\"docutils literal\">\n   0x200000000\n  </span>\n  .\n </p>\n</div>\n"
 				},
 				"start_hpa2": {
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x0",
 					"title": "start_hpa2",
-					"description": "Start of second HPA for non-contiguous allocations in host for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Start of second HPA for non-contiguous allocations in host for the VM.\n </p>\n</div>\n"
 				},
 				"size_hpa2": {
 					"$ref": "#/definitions/MemorySizeType",
 					"default": "0x0",
 					"title": "size_hpa2",
-					"description": "Memory size of second HPA for non-contiguous allocations in Bytes for the VM."
+					"description": "<div class=\"document\">\n <p>\n  Memory size of second HPA for non-contiguous allocations in Bytes for the VM.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1416,12 +1316,12 @@
 				"load_order": {
 					"$ref": "#/definitions/LoadOrderType",
 					"title": "Load order",
-					"description": "Specify the load_order."
+					"description": "<div class=\"document\">\n <p>\n  Specify the load_order.\n </p>\n</div>\n"
 				},
 				"vm_type": {
 					"$ref": "#/definitions/VMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1429,86 +1329,87 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"secure_world_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "secure_world_support",
-					"description": "Specify secure world support for trustry OS."
+					"description": "<div class=\"document\">\n <p>\n  Specify secure world support for trustry OS.\n </p>\n</div>\n"
 				},
 				"hide_mtrr_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "hide_mtrr_support",
-					"description": "Specify MTRR capability to hide for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify MTRR capability to hide for VM.\n </p>\n</div>\n"
 				},
 				"security_vm": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "security_vm",
-					"description": "Specify TPM2 FIXUP for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify TPM2 FIXUP for VM.\n </p>\n</div>\n"
+				},
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"memory": {
 					"$ref": "#/definitions/ServiceMemoryInfo",
 					"title": "memory",
-					"description": "Specify memory information for Service and User VMs."
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"priority": {
 					"$ref": "#/definitions/PriorityType",
 					"default": "PRIO_LOW",
 					"title": "priority",
-					"description": "Specify the VM vCPU priority for scheduling."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM vCPU priority for scheduling.\n </p>\n</div>\n"
 				},
 				"companion_vmid": {
 					"type": "integer",
 					"default": 65535,
 					"title": "companion_vmid",
-					"description": "Specify the companion VM id of this VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify the companion VM id of this VM.\n </p>\n</div>\n"
 				},
 				"os_config": {
 					"$ref": "#/definitions/OSConfigurations",
 					"title": "os_config",
-					"description": "General information for host kernel, boot\nargument and memory."
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
 				},
 				"console_vuart": {
-					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
 					"title": "console_vuart",
-					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
-				},
-				"mmio_resources": {
-					"$ref": "#/definitions/MMIOResourcesConfiguration",
-					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1522,7 +1423,18 @@
 					"type": "integer",
 					"default": 256,
 					"title": "VM physical memory allocation (MB)",
-					"description": "Specify the physical memory allocated to this VM in Megabytes."
+					"description": "<div class=\"document\">\n <p>\n  Specify the physical memory allocated to this VM in Megabytes.\n </p>\n</div>\n"
+				}
+			}
+		},
+		"PostLaunchedMMIOResourcesConfiguration": {
+			"type": "object",
+			"properties": {
+				"TPM2": {
+					"$ref": "#/definitions/Boolean",
+					"default": "n",
+					"title": "Trusted Platform Module passthrough",
+					"description": "<div class=\"document\">\n <p>\n  Passthrough the Trusted Platform Module (TPM2) device to this VM. (Optional) (Default value is n)\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1546,12 +1458,12 @@
 				"load_order": {
 					"$ref": "#/definitions/LoadOrderType",
 					"title": "Load order",
-					"description": "Specify the load_order."
+					"description": "<div class=\"document\">\n <p>\n  Specify the load_order.\n </p>\n</div>\n"
 				},
 				"vm_type": {
 					"$ref": "#/definitions/VMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1559,86 +1471,87 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"secure_world_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "secure_world_support",
-					"description": "Specify secure world support for trustry OS."
+					"description": "<div class=\"document\">\n <p>\n  Specify secure world support for trustry OS.\n </p>\n</div>\n"
 				},
 				"hide_mtrr_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "hide_mtrr_support",
-					"description": "Specify MTRR capability to hide for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify MTRR capability to hide for VM.\n </p>\n</div>\n"
 				},
 				"security_vm": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "security_vm",
-					"description": "Specify TPM2 FIXUP for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify TPM2 FIXUP for VM.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"memory": {
 					"$ref": "#/definitions/PostLaunchedMemoryInfo",
 					"title": "memory",
-					"description": "Specify memory information for Service and User VMs."
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"priority": {
 					"$ref": "#/definitions/PriorityType",
 					"default": "PRIO_LOW",
 					"title": "priority",
-					"description": "Specify the VM vCPU priority for scheduling."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM vCPU priority for scheduling.\n </p>\n</div>\n"
 				},
 				"companion_vmid": {
 					"type": "integer",
 					"default": 65535,
 					"title": "companion_vmid",
-					"description": "Specify the companion VM id of this VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify the companion VM id of this VM.\n </p>\n</div>\n"
 				},
 				"console_vuart": {
-					"$ref": "#/definitions/ConsoleVuartConfigurationType",
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
 					"title": "console_vuart",
-					"description": "Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits ``id`` attribute."
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
-					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"$ref": "#/definitions/PostLaunchedMMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1649,31 +1562,31 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				},
 				"os_type": {
 					"$ref": "#/definitions/OSType",
 					"default": "Non-Windows OS",
 					"title": "OS type",
-					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+					"description": "<div class=\"document\">\n <p>\n  Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way.\n </p>\n</div>\n"
 				},
 				"vbootloader": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "OVMF (Open Virtual Machine Firmware)",
-					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+					"description": "<div class=\"document\">\n <p>\n  Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set.\n </p>\n</div>\n"
 				},
 				"vuart0": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "Emulate COM1 as standard I/O",
-					"description": "Enable ACRN Device Model to emulate COM1 as a User VM standard IO."
+					"description": "<div class=\"document\">\n <p>\n  Enable ACRN Device Model to emulate COM1 as a User VM standard IO.\n </p>\n</div>\n"
 				},
 				"usb_xhci": {
 					"type": "string",
 					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
 					"title": "usb_xhci",
-					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+					"description": "<div class=\"document\">\n <p>\n  Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting.\n </p>\n</div>\n"
 				},
 				"virtio_devices": {
 					"type": "object",
@@ -1681,26 +1594,40 @@
 						"console": {
 							"type": "string",
 							"title": "console",
-							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio console device setting.Input format:\n  </dt>\n  <dd>\n   <p>\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      [@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]\n     </span>\n    </span>\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"network": {
 							"type": "string",
 							"title": "network",
-							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio network device setting.\n  </dt>\n  <dd>\n   <p>\n    Input format:\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]\n     </span>\n    </span>\n    .\nThe\n    <span class=\"docutils literal\">\n     device_name\n    </span>\n    is the name of the TAP (or MacVTap) device.\nIt must include the keyword\n    <span class=\"docutils literal\">\n     tap\n    </span>\n    .\n    <span class=\"docutils literal\">\n     vhost\n    </span>\n    specifies the\nvhost backend; otherwise, the VBSU backend is used. The\n    <span class=\"docutils literal\">\n     mac\n    </span>\n    address is optional.\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"input": {
 							"type": "string",
 							"title": "input",
-							"description": "The virtio input device setting."
+							"description": "<div class=\"document\">\n <p>\n  The virtio input device setting.\n </p>\n</div>\n"
 						},
 						"block": {
 							"type": "string",
 							"title": "block",
-							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio block device setting.\n  </dt>\n  <dd>\n   <p>\n    Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						}
 					},
 					"title": "Virt-IO devices",
-					"description": "Enable virt-IO devices in post-launched VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable virt-IO devices in post-launched VMs.\n </p>\n</div>\n"
+				}
+			}
+		},
+		"BasicMemoryInfo": {
+			"type": "object",
+			"required": [
+				"whole"
+			],
+			"properties": {
+				"whole": {
+					"type": "integer",
+					"default": 256,
+					"title": "VM physical memory allocation (MB)",
+					"description": "<div class=\"document\">\n <p>\n  Specify the physical memory allocated to this VM in Megabytes.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1709,15 +1636,18 @@
 			"required": [
 				"vm_type",
 				"name",
+				"memory",
+				"console_vuart",
 				"os_type",
 				"vbootloader",
+				"vuart0",
 				"virtio_devices"
 			],
 			"properties": {
 				"vm_type": {
-					"$ref": "#/definitions/VMType",
+					"$ref": "#/definitions/BasicVMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1725,17 +1655,33 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
+				},
+				"memory": {
+					"$ref": "#/definitions/BasicMemoryInfo",
+					"title": "memory",
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
+					"title": "console_vuart",
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
 					"$ref": "#/definitions/MMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1746,19 +1692,25 @@
 					"$ref": "#/definitions/OSType",
 					"default": "Non-Windows OS",
 					"title": "OS type",
-					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+					"description": "<div class=\"document\">\n <p>\n  Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way.\n </p>\n</div>\n"
 				},
 				"vbootloader": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "OVMF (Open Virtual Machine Firmware)",
-					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+					"description": "<div class=\"document\">\n <p>\n  Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set.\n </p>\n</div>\n"
+				},
+				"vuart0": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "Emulate COM1 as standard I/O",
+					"description": "<div class=\"document\">\n <p>\n  Enable ACRN Device Model to emulate COM1 as a User VM standard IO.\n </p>\n</div>\n"
 				},
 				"usb_xhci": {
 					"type": "string",
 					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
 					"title": "usb_xhci",
-					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+					"description": "<div class=\"document\">\n <p>\n  Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting.\n </p>\n</div>\n"
 				},
 				"virtio_devices": {
 					"type": "object",
@@ -1766,26 +1718,26 @@
 						"console": {
 							"type": "string",
 							"title": "console",
-							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio console device setting.Input format:\n  </dt>\n  <dd>\n   <p>\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      [@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]\n     </span>\n    </span>\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"network": {
 							"type": "string",
 							"title": "network",
-							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio network device setting.\n  </dt>\n  <dd>\n   <p>\n    Input format:\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]\n     </span>\n    </span>\n    .\nThe\n    <span class=\"docutils literal\">\n     device_name\n    </span>\n    is the name of the TAP (or MacVTap) device.\nIt must include the keyword\n    <span class=\"docutils literal\">\n     tap\n    </span>\n    .\n    <span class=\"docutils literal\">\n     vhost\n    </span>\n    specifies the\nvhost backend; otherwise, the VBSU backend is used. The\n    <span class=\"docutils literal\">\n     mac\n    </span>\n    address is optional.\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"input": {
 							"type": "string",
 							"title": "input",
-							"description": "The virtio input device setting."
+							"description": "<div class=\"document\">\n <p>\n  The virtio input device setting.\n </p>\n</div>\n"
 						},
 						"block": {
 							"type": "string",
 							"title": "block",
-							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio block device setting.\n  </dt>\n  <dd>\n   <p>\n    Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						}
 					},
 					"title": "Virt-IO devices",
-					"description": "Enable virt-IO devices in post-launched VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable virt-IO devices in post-launched VMs.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1793,13 +1745,14 @@
 			"type": "object",
 			"required": [
 				"vm_type",
-				"name"
+				"name",
+				"console_vuart"
 			],
 			"properties": {
 				"vm_type": {
-					"$ref": "#/definitions/VMType",
+					"$ref": "#/definitions/BasicVMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1807,17 +1760,28 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
+					"title": "console_vuart",
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
 					"$ref": "#/definitions/MMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1830,13 +1794,14 @@
 			"type": "object",
 			"required": [
 				"vm_type",
-				"name"
+				"name",
+				"console_vuart"
 			],
 			"properties": {
 				"vm_type": {
-					"$ref": "#/definitions/VMType",
+					"$ref": "#/definitions/BasicVMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1844,12 +1809,23 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
-				"mmio_resources": {
-					"$ref": "#/definitions/MMIOResourcesConfiguration",
-					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+				"cpu_affinity": {
+					"$ref": "#/definitions/CPUAffinityConfiguration",
+					"title": "Physical CPU affinity",
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
+				},
+				"os_config": {
+					"$ref": "#/definitions/OSConfigurations",
+					"title": "os_config",
+					"description": "<div class=\"document\">\n <p>\n  General information for host kernel, boot\nargument and memory.\n </p>\n</div>\n"
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
+					"title": "console_vuart",
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1858,15 +1834,18 @@
 			"required": [
 				"vm_type",
 				"name",
+				"memory",
+				"console_vuart",
 				"os_type",
 				"vbootloader",
+				"vuart0",
 				"virtio_devices"
 			],
 			"properties": {
 				"vm_type": {
-					"$ref": "#/definitions/VMType",
+					"$ref": "#/definitions/BasicVMType",
 					"title": "VM type",
-					"description": "Specify the VM type."
+					"description": "<div class=\"document\">\n <p>\n  Specify the VM type.\n </p>\n</div>\n"
 				},
 				"name": {
 					"type": "string",
@@ -1874,17 +1853,28 @@
 					"maxLength": 15,
 					"pattern": "^\\S+$",
 					"title": "VM name",
-					"description": "Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command."
+					"description": "<div class=\"document\">\n <p>\n  Type in the name used to identify each VM.  The VM name will be shown in the hypervisor console vm_list command.\n </p>\n</div>\n"
 				},
 				"cpu_affinity": {
 					"$ref": "#/definitions/CPUAffinityConfiguration",
 					"title": "Physical CPU affinity",
-					"description": "List of pCPU that this VM's vCPUs are pinned to."
+					"description": "<div class=\"document\">\n <p>\n  List of pCPU that this VM's vCPUs are pinned to.\n </p>\n</div>\n"
+				},
+				"memory": {
+					"$ref": "#/definitions/PostLaunchedMemoryInfo",
+					"title": "memory",
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
+				},
+				"console_vuart": {
+					"$ref": "#/definitions/ConsoleVuartConfiguration",
+					"default": "None",
+					"title": "console_vuart",
+					"description": "<div class=\"document\">\n <p>\n  Specify the console vUART (aka PCI based vUART) with the vUART ID by\nits\n  <span class=\"docutils literal\">\n   id\n  </span>\n  attribute.\n </p>\n</div>\n"
 				},
 				"mmio_resources": {
-					"$ref": "#/definitions/MMIOResourcesConfiguration",
+					"$ref": "#/definitions/PostLaunchedMMIOResourcesConfiguration",
 					"title": "mmio_resources",
-					"description": "MMIO resources to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  MMIO resources to passthrough.\n </p>\n</div>\n"
 				},
 				"pci_devs": {
 					"$ref": "#/definitions/PCIDevsConfiguration",
@@ -1895,19 +1885,25 @@
 					"$ref": "#/definitions/OSType",
 					"default": "Non-Windows OS",
 					"title": "OS type",
-					"description": "Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way."
+					"description": "<div class=\"document\">\n <p>\n  Specify user VM OS type, for config tool to format the DM commandline. If it is windows, then add -windows to DM parameter. It supports Oracle virtio-blk, virtio-net and virtio-input devices for Windows guests with secure boot. For windows guest vm this option is mandatory for running Windows in a User VM. If it is not used, Windows will not recognize the virtual disk. When it is linux like OS , config tool also format the related parameters in the same way.\n </p>\n</div>\n"
 				},
 				"vbootloader": {
 					"$ref": "#/definitions/EnablementType",
 					"default": "Enable",
 					"title": "OVMF (Open Virtual Machine Firmware)",
-					"description": "Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set."
+					"description": "<div class=\"document\">\n <p>\n  Specify if to use virtual boot loader OVMF (Open Virtual Machine Firmware) to boot User VM, right now ovmf is the only virtual boot loader supported. User could also disable this to use another boot protocol with parameter -K set.\n </p>\n</div>\n"
+				},
+				"vuart0": {
+					"$ref": "#/definitions/EnablementType",
+					"default": "Enable",
+					"title": "Emulate COM1 as standard I/O",
+					"description": "<div class=\"document\">\n <p>\n  Enable ACRN Device Model to emulate COM1 as a User VM standard IO.\n </p>\n</div>\n"
 				},
 				"usb_xhci": {
 					"type": "string",
 					"pattern": "^([\\d]+-[\\d]+){0,1}(:[\\d]+-[\\d]+)*$",
 					"title": "usb_xhci",
-					"description": "Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting."
+					"description": "<div class=\"document\">\n <p>\n  Device model emulates USB controller used to support USB 3.0 devices, (also supports USB 2.0 and USB 1.0 devices). The physical USB devices attached on the specified bus and port in service VM will be detected by User VM and used as expected as parameters setting.\n </p>\n</div>\n"
 				},
 				"virtio_devices": {
 					"type": "object",
@@ -1915,26 +1911,26 @@
 						"console": {
 							"type": "string",
 							"title": "console",
-							"description": "The virtio console device setting.Input format:\n              ``[@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]``"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio console device setting.Input format:\n  </dt>\n  <dd>\n   <p>\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      [@]stdio|tty|pty|sock:portname[=portpath][,[@]stdio|tty|pty:portname[=portpath]]\n     </span>\n    </span>\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"network": {
 							"type": "string",
 							"title": "network",
-							"description": "The virtio network device setting.\n              Input format: ``device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]``.\n              The ``device_name`` is the name of the TAP (or MacVTap) device.\n              It must include the keyword ``tap``. ``vhost`` specifies the\n              vhost backend; otherwise, the VBSU backend is used. The ``mac``\n              address is optional."
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio network device setting.\n  </dt>\n  <dd>\n   <p>\n    Input format:\n    <span class=\"docutils literal\">\n     <span class=\"pre\">\n      device_name[,vhost][,mac=XX:XX:XX:XX:XX:XX]\n     </span>\n    </span>\n    .\nThe\n    <span class=\"docutils literal\">\n     device_name\n    </span>\n    is the name of the TAP (or MacVTap) device.\nIt must include the keyword\n    <span class=\"docutils literal\">\n     tap\n    </span>\n    .\n    <span class=\"docutils literal\">\n     vhost\n    </span>\n    specifies the\nvhost backend; otherwise, the VBSU backend is used. The\n    <span class=\"docutils literal\">\n     mac\n    </span>\n    address is optional.\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						},
 						"input": {
 							"type": "string",
 							"title": "input",
-							"description": "The virtio input device setting."
+							"description": "<div class=\"document\">\n <p>\n  The virtio input device setting.\n </p>\n</div>\n"
 						},
 						"block": {
 							"type": "string",
 							"title": "block",
-							"description": "The virtio block device setting.\n              Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img"
+							"description": "<div class=\"document\">\n <dl class=\"simple\">\n  <dt>\n   The virtio block device setting.\n  </dt>\n  <dd>\n   <p>\n    Format: [blk partition:][img path] e.g.: /dev/sda3:./a/b.img\n   </p>\n  </dd>\n </dl>\n</div>\n"
 						}
 					},
 					"title": "Virt-IO devices",
-					"description": "Enable virt-IO devices in post-launched VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable virt-IO devices in post-launched VMs.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -1955,161 +1951,217 @@
 			"type": "object",
 			"required": [
 				"DEBUG_OPTIONS",
-				"FEATURES"
+				"FEATURES",
+				"vuart_connections"
 			],
 			"properties": {
 				"DEBUG_OPTIONS": {
 					"$ref": "#/definitions/DebugOptionsType",
 					"title": "Debug options",
-					"description": "Configure the debug facilities."
+					"description": "<div class=\"document\">\n <p>\n  Configure the debug facilities.\n </p>\n</div>\n"
 				},
 				"FEATURES": {
 					"$ref": "#/definitions/BasicFeatureOptionsType",
 					"title": "Hypervisor features",
-					"description": "Enable hypervisor features."
+					"description": "<div class=\"document\">\n <p>\n  Enable hypervisor features.\n </p>\n</div>\n"
+				},
+				"vuart_connections": {
+					"$ref": "#/definitions/VuartConnectionsType",
+					"title": "Virtual UART connection",
+					"description": "<div class=\"document\">\n <p>\n  Specify the vUART connection setting.\nRefer to\n  <a class=\"reference external\" href=\"https://projectacrn.github.io/latest/tutorials/vuart_configuration.html#vuart-config\" target=\"_blank\">\n   Enable vUART Configurations\n  </a>\n  for detailed vUART settings.\n </p>\n</div>\n"
+				}
+			}
+		},
+		"AdvancedMemoryInfo": {
+			"type": "object",
+			"required": [
+				"start_hpa"
+			],
+			"properties": {
+				"start_hpa": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x100000000",
+					"title": "start_hpa",
+					"description": "<div class=\"document\">\n <p>\n  The starting physical address in host for the VM.\n </p>\n</div>\n"
+				},
+				"size": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x20000000",
+					"title": "size",
+					"description": "<div class=\"document\">\n <p>\n  The memory size in bytes for the VM. Default value is\n  <span class=\"docutils literal\">\n   0x200000000\n  </span>\n  .\n </p>\n</div>\n"
+				},
+				"start_hpa2": {
+					"$ref": "#/definitions/HexFormat",
+					"default": "0x0",
+					"title": "start_hpa2",
+					"description": "<div class=\"document\">\n <p>\n  Start of second HPA for non-contiguous allocations in host for the VM.\n </p>\n</div>\n"
+				},
+				"size_hpa2": {
+					"$ref": "#/definitions/MemorySizeType",
+					"default": "0x0",
+					"title": "size_hpa2",
+					"description": "<div class=\"document\">\n <p>\n  Memory size of second HPA for non-contiguous allocations in Bytes for the VM.\n </p>\n</div>\n"
 				}
 			}
 		},
 		"VMAdvancedConfigType": {
 			"type": "object",
 			"required": [
-				"clos"
+				"clos",
+				"memory"
 			],
 			"properties": {
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"epc_section": {
 					"$ref": "#/definitions/EPCSection",
 					"title": "epc_section",
-					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned.\n </p>\n</div>\n"
+				},
+				"memory": {
+					"$ref": "#/definitions/AdvancedMemoryInfo",
+					"title": "memory",
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"pt_intx": {
 					"type": "string",
 					"title": "pt_intx",
-					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+					"description": "<div class=\"document\">\n <p>\n  Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI.\n </p>\n</div>\n"
 				},
 				"PTM": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				}
 			}
 		},
 		"PreLaunchedVMAdvancedConfigType": {
 			"type": "object",
 			"required": [
-				"clos"
+				"clos",
+				"memory"
 			],
 			"properties": {
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"epc_section": {
 					"$ref": "#/definitions/EPCSection",
 					"title": "epc_section",
-					"description": "Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned."
+					"description": "<div class=\"document\">\n <p>\n  Specify SGX Enclave Page Cache section base and size in byte. It must be page aligned.\n </p>\n</div>\n"
+				},
+				"memory": {
+					"$ref": "#/definitions/PreLaunchedMemoryInfo",
+					"title": "memory",
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				},
 				"pt_intx": {
 					"type": "string",
 					"title": "pt_intx",
-					"description": "Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI."
+					"description": "<div class=\"document\">\n <p>\n  Determine the static memory size of pt_intx array. It is used to describe the pre-launched VM owned ioapic pins and the corresponding mapping between physical GSI and virtual GSI.\n </p>\n</div>\n"
 				},
 				"PTM": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				}
 			}
 		},
 		"ServiceVMAdvancedConfigType": {
 			"type": "object",
 			"required": [
-				"clos"
+				"clos",
+				"memory"
 			],
 			"properties": {
 				"lapic_passthrough": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
+				},
+				"memory": {
+					"$ref": "#/definitions/ServiceMemoryInfo",
+					"title": "memory",
+					"description": "<div class=\"document\">\n <p>\n  Specify memory information for Service and User VMs.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -2123,36 +2175,36 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "LAPIC passthrough",
-					"description": "Specify LAPIC to passthrough."
+					"description": "<div class=\"document\">\n <p>\n  Specify LAPIC to passthrough.\n </p>\n</div>\n"
 				},
 				"io_completion_polling": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "I/O completion polling",
-					"description": "Specify Polling mode for IO Completion."
+					"description": "<div class=\"document\">\n <p>\n  Specify Polling mode for IO Completion.\n </p>\n</div>\n"
 				},
 				"nested_virtualization_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Nested virtualization support",
-					"description": "Specify nested virtualization support for KVM."
+					"description": "<div class=\"document\">\n <p>\n  Specify nested virtualization support for KVM.\n </p>\n</div>\n"
 				},
 				"virtual_cat_support": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Virtual CAT support",
-					"description": "Specify virtual CAT support for VM."
+					"description": "<div class=\"document\">\n <p>\n  Specify virtual CAT support for VM.\n </p>\n</div>\n"
 				},
 				"clos": {
 					"$ref": "#/definitions/CLOSConfiguration",
 					"title": "clos",
-					"description": "Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution."
+					"description": "<div class=\"document\">\n <p>\n  Class of Service for Cache Allocation Technology.\nRefer SDM 17.19.2 for details, and use with caution.\n </p>\n</div>\n"
 				},
 				"PTM": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Precision Time Measurement",
-					"description": "Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software."
+					"description": "<div class=\"document\">\n <p>\n  Enable virtualization of PCIE Precision Time Measurement (PTM) mechanism for devices with PTM capability and for real-time application. HV provides PCIE root port emulation instead of host bridge emulation for VM , PTM could coordinate timing between device and root port with device\u2019s local timebases without relying on software.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -2175,60 +2227,60 @@
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Hypervisor relocation in memory",
-					"description": "Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware."
+					"description": "<div class=\"document\">\n <p>\n  Enable hypervisor relocation in memory.  The boot loader may need to change the location of the hypervisor because of other firmware.\n </p>\n</div>\n"
 				},
 				"SCHEDULER": {
 					"$ref": "#/definitions/SchedulerType",
 					"default": "SCHED_BVT",
 					"title": "Scheduler and workload prioritization",
-					"description": "Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU."
+					"description": "<div class=\"document\">\n <p>\n  Choose scheduling algorithm used for determining which User VM runs on a shared virtual CPU.\n </p>\n</div>\n"
 				},
 				"MULTIBOOT2": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Enable Multiboot2",
-					"description": "Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code."
+					"description": "<div class=\"document\">\n <p>\n  Enable multiboot2 boot protocol support and multiboot1 downward compatibility.  Disable this feature if multiboot1 meets your requirements and to reduce lines of code.\n </p>\n</div>\n"
 				},
 				"ENFORCE_TURNOFF_AC": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Split lock detection",
-					"description": "Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance."
+					"description": "<div class=\"document\">\n <p>\n  Enable split lock detection for real-time application. This prevents alignment check exceptions from impacting hypervisor real-time performance.\n </p>\n</div>\n"
 				},
 				"ENFORCE_TURNOFF_GP": {
 					"$ref": "#/definitions/Boolean",
 					"default": "n",
 					"title": "Prevent system bus locking",
-					"description": "Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance."
+					"description": "<div class=\"document\">\n <p>\n  Enable UC lock detection for real-time application. This prevents general protection faults from impacting hypervisor real-time performance.\n </p>\n</div>\n"
 				},
 				"RDT": {
 					"$ref": "#/definitions/RDTType",
 					"title": "Intel Resource Director Technology",
-					"description": "Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs."
+					"description": "<div class=\"document\">\n <p>\n  Enable Intel Resource Director Technology (RDT). The technology provides cache and memory allocation features to improve time performance of real-time VMs.\n </p>\n</div>\n"
 				},
 				"HYPERV_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "TLFS support for Windows",
-					"description": "Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support."
+					"description": "<div class=\"document\">\n <p>\n  Enable Microsoft(R) Hypervisor Top-Level Functional Specification for Windows hyper-v support.\n </p>\n</div>\n"
 				},
 				"ACPI_PARSE_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Parse ACPI tables at runtime",
-					"description": "Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file."
+					"description": "<div class=\"document\">\n <p>\n  Enable ACPI runtime parsing to get DMAR (DMA remapping) configuration data from the APCI tables. Otherwise, use existing, static information from the associated board.xml file.\n </p>\n</div>\n"
 				},
 				"L1D_VMENTRY_ENABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "Mitigate L1 terminal fault",
-					"description": "Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache."
+					"description": "<div class=\"document\">\n <p>\n  Enable L1 cache flush before VM entry,Determine the enabling of mitigation solution for L1 Terminal Fault (L1TF). The L1 data cache will be flushed before each VMENTRY.L1TF is a speculative execution side channel cache timing vulnerability. Each variety of L1TF could potentially allow unauthorized disclosure of information residing in the L1 data cache.\n </p>\n</div>\n"
 				},
 				"MCE_ON_PSC_DISABLED": {
 					"$ref": "#/definitions/Boolean",
 					"default": "y",
 					"title": "MCE workaround",
-					"description": "Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families)."
+					"description": "<div class=\"document\">\n <p>\n  Enable software workaround for Machine Check Error on Page Size Change (silicon bug in some processor families).\n </p>\n</div>\n"
 				},
 				"SSRAM": {
 					"$ref": "#/definitions/SSRAMInfo",
@@ -2247,7 +2299,7 @@
 					"$ref": "#/definitions/HexFormat",
 					"default": "0x2000",
 					"title": "Stack size (in byte)",
-					"description": "Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions."
+					"description": "<div class=\"document\">\n <p>\n  Capacity of one stack (in bytes) used by a physical core. Each core uses one stack for normal operation and another three for specific exceptions.\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -2266,13 +2318,13 @@
 					"maximum": 1024,
 					"default": 96,
 					"title": "Maximum number of PCI devices",
-					"description": "Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)"
+					"description": "<div class=\"document\">\n <p>\n  Specify the static memory allocation of maximum number of PCI devices. (Default value is 96)\n </p>\n</div>\n"
 				},
 				"MAX_PT_IRQ_ENTRIES": {
 					"type": "integer",
 					"default": 256,
 					"title": "MAX_PT_IRQ_ENTRIES",
-					"description": "The pre-defined number of interrupt sources of all pass-through devices."
+					"description": "<div class=\"document\">\n <p>\n  The pre-defined number of interrupt sources of all pass-through devices.\n </p>\n</div>\n"
 				},
 				"MAX_MSIX_TABLE_NUM": {
 					"type": "integer",
@@ -2280,7 +2332,7 @@
 					"maximum": 2048,
 					"default": 64,
 					"title": "MAX_MSIX_TABLE_NUM",
-					"description": "Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)"
+					"description": "<div class=\"document\">\n <p>\n  Specify maximum number of MSI-X tables per device. If this value is empty, then the default value will be calculated from the board XML file. (Default value is 64)\n </p>\n</div>\n"
 				},
 				"MAX_EMULATED_MMIO": {
 					"type": "integer",
@@ -2288,7 +2340,7 @@
 					"maximum": 128,
 					"default": 16,
 					"title": "MAX_EMULATED_MMIO",
-					"description": "Specify maximum number of emulated MMIO regions. (Default value is 16)"
+					"description": "<div class=\"document\">\n <p>\n  Specify maximum number of emulated MMIO regions. (Default value is 16)\n </p>\n</div>\n"
 				}
 			}
 		},
@@ -2303,17 +2355,17 @@
 				"FEATURES": {
 					"$ref": "#/definitions/AdvancedFeatureOptionsType",
 					"title": "Hypervisor features",
-					"description": "Enable hypervisor features."
+					"description": "<div class=\"document\">\n <p>\n  Enable hypervisor features.\n </p>\n</div>\n"
 				},
 				"MEMORY": {
 					"$ref": "#/definitions/AdvancedMemoryOptionsType",
 					"title": "Memory options",
-					"description": "Configure memory used by the hypervisor."
+					"description": "<div class=\"document\">\n <p>\n  Configure memory used by the hypervisor.\n </p>\n</div>\n"
 				},
 				"CAPACITIES": {
 					"$ref": "#/definitions/AdvancedCapacitiesOptionsType",
 					"title": "Hypervisor capacities",
-					"description": "Configure the capacities of the hypervisor."
+					"description": "<div class=\"document\">\n <p>\n  Configure the capacities of the hypervisor.\n </p>\n</div>\n"
 				}
 			}
 		}
