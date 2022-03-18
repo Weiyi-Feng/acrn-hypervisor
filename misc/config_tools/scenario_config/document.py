@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2022 Intel Corporation.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
 """
 This program support run in pyodide env.
 In js side you can pass params by add follow code before this script.
